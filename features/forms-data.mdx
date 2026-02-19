@@ -1,0 +1,322 @@
+---
+title: "Forms & Data Management"
+description: "Collect and manage form submissions with built-in data storage and notifications"
+---
+
+All form submissions are automatically saved to your Kleap dashboard. No configuration needed - forms work out of the box!
+
+## How Forms Work
+
+Kleap forms automatically:
+
+- **Save submissions** - Every submission stored in your dashboard
+- **Track metadata** - IP address, timestamp, user agent
+- **Support multiple forms** - Each form has a unique ID
+- **Export data** - Download as CSV anytime
+
+<Info>
+  Forms work on both preview URLs and published sites. All data is automatically backed up.
+</Info>
+
+## Viewing Form Submissions
+
+Access all form submissions from your dashboard:
+
+1. Go to [kleap.co/apps](https://kleap.co/apps)
+2. Open your project
+3. Click the **Data** icon (database icon) in the left panel
+4. Browse all submissions with dates and user information
+
+### Dashboard Tabs
+
+| Tab | Description |
+|-----|-------------|
+| **Summary** | Visual analytics and statistics for each field |
+| **Submissions** | Complete list of all responses |
+| **Integrations** | Configure email notifications and webhooks |
+
+## Email Notifications
+
+Get notified when someone submits your form:
+
+1. Open your project
+2. Click the **Data** icon
+3. Go to the **Integrations** tab
+4. Check "Get email notifications"
+5. Enter your email address
+6. Click "Save Integration Settings"
+
+<Tip>
+  You can add multiple email addresses separated by commas to notify your whole team!
+</Tip>
+
+### Notification Features
+
+- **Instant alerts** - Receive emails within seconds
+- **Full submission data** - All form fields included
+- **Multiple recipients** - Add unlimited email addresses
+- **Free on all plans** - No Pro plan required
+
+## Form Integrations
+
+### Email Notifications (Free)
+
+Send notifications to yourself or your team:
+
+```
+✓ Instant email alerts
+✓ Multiple email addresses
+✓ All form data included
+✓ No setup required
+```
+
+### Respondent Notifications (Pro)
+
+Automatically thank form submitters:
+
+- Custom email subject
+- Custom email body
+- Sent to form respondent's email
+- Professional auto-responder
+
+<Card title="Upgrade to Pro" icon="crown" href="/introduction/pricing">
+  Unlock respondent notifications and advanced features
+</Card>
+
+### Webhooks (Pro)
+
+Send form data to your own API:
+
+- Real-time HTTP POST requests
+- Custom endpoint URL
+- Full submission payload
+- Test webhook functionality
+- View delivery logs
+
+## Exporting Data
+
+Download all form submissions as CSV:
+
+1. Go to the **Data** tab
+2. Click **Export CSV** (top right)
+3. Open in Excel, Google Sheets, or any spreadsheet software
+
+### Export Features
+
+- All form fields included
+- Timestamps and metadata
+- Filter by form or date range
+- Compatible with all spreadsheet apps
+
+## Multiple Forms
+
+Manage multiple forms on one site:
+
+- Each form has a unique `formId`
+- Submissions grouped by form
+- Separate analytics per form
+- Individual export for each form
+
+### Form List View
+
+When you have multiple forms:
+
+- Dashboard shows all forms
+- Click a form to view its submissions
+- See submission count per form
+- Track form performance
+
+## Text Editing
+
+Edit text on your site without using credits:
+
+1. Click any text block in the preview
+2. Edit directly in the text editor
+3. Click outside to save
+4. Changes apply immediately
+
+<Info>
+  Text editing is free and doesn't consume AI credits!
+</Info>
+
+## Form Setup (Technical)
+
+Forms use the `KleapForm` component:
+
+```tsx
+<KleapForm
+  formId="contact"
+  title="Contact Us"
+  fields={[
+    { name: "name", label: "Name", type: "text", required: true },
+    { name: "email", label: "Email", type: "email", required: true },
+    { name: "message", label: "Message", type: "textarea", required: true }
+  ]}
+  submitText="Send Message"
+  successMessage="Thank you! We'll get back to you soon."
+/>
+```
+
+### Supported Field Types
+
+| Type | Description | Example |
+|------|-------------|---------|
+| `text` | Single-line text | Name, company |
+| `email` | Email validation | Email address |
+| `tel` | Phone number | Contact number |
+| `textarea` | Multi-line text | Message, feedback |
+| `select` | Dropdown menu | Country, category |
+| `checkbox` | Yes/no option | Newsletter signup |
+| `radio` | Single choice | Size, preference |
+| `url` | URL validation | Website |
+| `number` | Numeric input | Age, quantity |
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Not seeing form submissions?">
+    Forms work automatically. Check these:
+    - Go to Data tab in your dashboard
+    - Verify you're in the correct project
+    - Email notifications need to be enabled separately
+    - All submissions ARE saved even without emails
+  </Accordion>
+
+  <Accordion title="Not receiving email notifications?">
+    Check these settings:
+    - Data tab → Integrations → "Get email notifications" must be checked
+    - Email address must be entered correctly
+    - Check your spam folder
+    - Test with a form submission
+  </Accordion>
+
+  <Accordion title="How to change notification email?">
+    1. Data tab → Integrations tab
+    2. Update the email address field
+    3. Click "Save Integration Settings"
+    4. Changes apply immediately
+  </Accordion>
+
+  <Accordion title="Can I delete form submissions?">
+    Yes! Each submission has a delete button in the Submissions tab.
+  </Accordion>
+
+  <Accordion title="How many forms can I have?">
+    Unlimited! Create as many forms as you need. Each form is tracked separately.
+  </Accordion>
+</AccordionGroup>
+
+## Privacy & Security
+
+Form submissions are secure:
+
+- **SSL encryption** - All data transmitted securely
+- **Data privacy** - Only you can access submissions
+- **GDPR compliant** - User data handled responsibly
+- **No third-party sharing** - Your data stays with Kleap
+
+## Common Use Cases
+
+### Contact Forms
+
+Collect inquiries from visitors:
+
+```tsx
+<KleapForm
+  formId="contact"
+  fields={[
+    { name: "name", label: "Name", type: "text", required: true },
+    { name: "email", label: "Email", type: "email", required: true },
+    { name: "subject", label: "Subject", type: "text" },
+    { name: "message", label: "Message", type: "textarea", required: true, rows: 6 }
+  ]}
+  submitText="Send Message"
+/>
+```
+
+### Newsletter Signup
+
+Build your email list:
+
+```tsx
+<KleapForm
+  formId="newsletter"
+  fields={[
+    { name: "email", label: "Email Address", type: "email", required: true },
+    { name: "consent", label: "I agree to receive marketing emails", type: "checkbox", required: true }
+  ]}
+  submitText="Subscribe"
+  successMessage="Welcome! Check your inbox for confirmation."
+/>
+```
+
+### Lead Generation
+
+Qualify potential customers:
+
+```tsx
+<KleapForm
+  formId="demo"
+  fields={[
+    { name: "company", label: "Company Name", type: "text", required: true },
+    { name: "email", label: "Work Email", type: "email", required: true },
+    { name: "phone", label: "Phone", type: "tel" },
+    { name: "size", label: "Team Size", type: "select", required: true,
+      options: ["1-10", "11-50", "51-200", "200+"] },
+    { name: "message", label: "Tell us about your needs", type: "textarea" }
+  ]}
+  submitText="Request Demo"
+/>
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Keep forms short">
+    Ask only essential questions. Every field reduces completion rate by ~10%.
+  </Accordion>
+
+  <Accordion title="Enable email notifications">
+    Respond to inquiries quickly by enabling instant email alerts.
+  </Accordion>
+
+  <Accordion title="Export data regularly">
+    Backup form submissions weekly to avoid data loss.
+  </Accordion>
+
+  <Accordion title="Test your forms">
+    Submit a test entry to verify email notifications work correctly.
+  </Accordion>
+
+  <Accordion title="Use clear field labels">
+    Make it obvious what information you're requesting.
+  </Accordion>
+
+  <Accordion title="Add success messages">
+    Confirm submission with a friendly thank you message.
+  </Accordion>
+</AccordionGroup>
+
+## FAQs
+
+**Q: Do forms work on published sites?**
+A: Yes! Forms work identically on preview URLs and published sites.
+
+**Q: Can I connect forms to my own database?**
+A: Use webhooks (Pro plan) to send form data to your API in real-time.
+
+**Q: How many submissions can I receive?**
+A: Unlimited! All plans support unlimited form submissions.
+
+**Q: Can I have multiple forms on one site?**
+A: Yes! Each form has a unique `formId` and submissions are grouped by form.
+
+**Q: Can I customize form styling?**
+A: Yes! Forms use Tailwind CSS and shadcn/ui components. Ask the AI to customize appearance.
+
+**Q: Is there a size limit for submissions?**
+A: Text fields support up to 10,000 characters. File uploads not currently supported.
+
+<Card title="Need Help?" icon="life-ring" href="mailto:support@kleap.co">
+  Contact our support team for assistance with forms
+</Card>

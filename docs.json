@@ -69,7 +69,8 @@
             "pages": [
               "features/publishing",
               "features/custom-domains",
-              "features/analytics"
+              "features/analytics",
+              "features/forms-data"
             ]
           },
           {
