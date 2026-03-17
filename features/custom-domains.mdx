@@ -53,13 +53,13 @@ Add an **A record** at your domain registrar pointing to Kleap's server:
   <Tab title="Root Domain (myapp.com)">
     | Type | Name | Value |
     |------|------|-------|
-    | A | @ | 20.56.72.69 |
-    | A | www | 20.56.72.69 |
+    | A | @ | 178.104.71.55 |
+    | A | www | 178.104.71.55 |
   </Tab>
   <Tab title="Subdomain (app.myapp.com)">
     | Type | Name | Value |
     |------|------|-------|
-    | A | app | 20.56.72.69 |
+    | A | app | 178.104.71.55 |
   </Tab>
 </Tabs>
 
@@ -101,20 +101,20 @@ You can connect multiple domains to one app:
 
 <AccordionGroup>
   <Accordion title="Domain not verifying">
-    - Double-check the A record points to `20.56.72.69`
+    - Double-check the A record points to `178.104.71.55`
     - Wait up to 48 hours for propagation
     - Use [DNS Checker](https://dnschecker.org) to verify
     - Ensure no conflicting A or CNAME records exist for the same name
   </Accordion>
 
   <Accordion title="SSL certificate not issued">
-    - DNS must resolve to `20.56.72.69` first
+    - DNS must resolve to `178.104.71.55` first
     - If using Cloudflare, make sure proxy is **OFF** (grey cloud / DNS only)
     - Wait 10-15 minutes after DNS propagation
   </Accordion>
 
   <Accordion title="www not working">
-    Add an A record for `www` pointing to `20.56.72.69`, same as the root domain.
+    Add an A record for `www` pointing to `178.104.71.55`, same as the root domain.
   </Accordion>
 
   <Accordion title="Redirect loop">
@@ -127,7 +127,7 @@ You can connect multiple domains to one app:
 
 If using Cloudflare as your DNS provider:
 
-1. Add an **A record** pointing to `20.56.72.69`
+1. Add an **A record** pointing to `178.104.71.55`
 2. Set proxy status to **DNS only** (grey cloud icon)
 3. Wait for the SSL certificate to be issued (usually under 10 minutes)
 
