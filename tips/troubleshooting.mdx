@@ -13,19 +13,19 @@ Quick solutions to common issues you might encounter.
 
 **Solutions**:
 
-1. **Wait a moment** - Preview can take a few seconds to start
-2. **Send a message** - Any message restarts the preview
+1. **Wait a moment** - The preview rebuilds after each change
+2. **Send a message** - Any message triggers a fresh rebuild
 3. **Check for errors** - Look at the error message in chat
 4. **Refresh** - Click the refresh button in preview panel
 5. **Check internet** - Ensure stable connection
 
 ### Preview Stopped
 
-**Symptom**: Preview says "Sandbox stopped" or similar
+**Symptom**: Preview shows an error or won't refresh
 
-**Cause**: Preview auto-stops after 15 minutes of inactivity
+**Cause**: A build may still be running or may have hit an error
 
-**Solution**: Send any message or click refresh to restart
+**Solution**: Send any message or click refresh to rebuild the preview
 
 ### Changes Not Showing
 
@@ -33,7 +33,7 @@ Quick solutions to common issues you might encounter.
 
 **Solutions**:
 
-1. Wait for hot reload (few seconds)
+1. Wait for the rebuild to finish (a few seconds)
 2. Click refresh in preview
 3. Hard refresh browser (Cmd/Ctrl + Shift + R)
 4. Check for errors that might prevent rendering
@@ -74,17 +74,20 @@ Can you fix the typing?
 
 ### Connection Failed
 
-**Symptoms**: "Failed to connect to database", "Supabase error"
+**Symptoms**: "Failed to connect to database"
 
 **Solutions**:
 
-1. Check Supabase project is active (not paused)
-2. Verify environment variables are set
-3. Check your Supabase connection in settings
+Kleap Database is fully managed by Kleap — there's nothing to provision or
+pause. If data calls fail:
+
+1. Confirm Kleap Database is enabled for this app (it's opt-in)
+2. Re-publish so the latest code is live
+3. Check the error message in chat for the failing query
 
 ```
 The database connection is failing. Can you check the
-Supabase configuration and environment variables?
+Kleap Database queries?
 ```
 
 ### Queries Return Empty
@@ -108,9 +111,12 @@ Can you check the RLS policies and query?
 
 **Solutions**:
 
-1. Check Supabase Auth settings
-2. Verify redirect URLs are configured
-3. Check for errors in browser console
+Kleap Database provides built-in email/password accounts — there are no
+external auth dashboards or redirect URLs to configure.
+
+1. Confirm Kleap Database (with accounts) is enabled for the app
+2. Check for errors in the browser console
+3. Describe the exact failure to the AI so it can fix the flow
 
 ```
 User authentication isn't working - [describe specific issue].
@@ -198,12 +204,12 @@ Can you make it responsive?
 
 1. Optimize images
 2. Add loading states
-3. Use server components where possible
+3. Keep components static and only hydrate interactive islands
 4. Lazy load non-critical content
 
 ```
 This page is loading slowly. Can you optimize it?
-Consider image optimization, code splitting, and server components.
+Consider image optimization, code splitting, and reducing client-side JavaScript.
 ```
 
 ### Too Many Re-renders
@@ -220,10 +226,10 @@ Can you optimize the component to prevent unnecessary renders?
 
 | Problem | Quick Fix |
 |---------|-----------|
-| Preview stuck | Send any message to restart |
+| Preview stuck | Send any message to rebuild |
 | Build error | Share error message with AI |
 | Styling broken | Clear browser cache, refresh |
-| Auth not working | Check Supabase dashboard |
+| Auth not working | Check Kleap Database is enabled |
 | Deploy failed | Check build logs |
 | Data not loading | Check RLS policies |
 | Changes lost | Use version history to restore |

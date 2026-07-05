@@ -13,7 +13,7 @@ Click the **Files** tab in the left sidebar to see:
 
 - All project files
 - Folder structure
-- File types (tsx, css, json, etc.)
+- File types (astro, tsx, css, etc.)
 
 ### Viewing Files
 
@@ -25,20 +25,20 @@ Click any file to view its contents:
 
 ## File Structure
 
-A typical Kleap app follows Next.js conventions:
+A typical Kleap app follows Astro conventions:
 
 ```
-├── app/                  # Pages and routes
-│   ├── page.tsx         # Homepage
-│   ├── layout.tsx       # Root layout
-│   └── [routes]/        # Other pages
-├── components/          # Reusable components
-│   ├── ui/             # UI primitives (shadcn)
-│   └── [custom]/       # Your components
-├── lib/                 # Utilities
-├── public/              # Static assets
-├── styles/              # Global styles
-└── package.json         # Dependencies
+├── src/
+│   ├── pages/            # Pages and routes (.astro)
+│   │   └── index.astro   # Homepage
+│   ├── layouts/          # Shared layouts
+│   │   └── Base.astro    # Root layout (header, footer)
+│   ├── components/       # Reusable components (.astro + .tsx islands)
+│   └── styles/
+│       └── global.css    # Global styles (Tailwind v4)
+├── public/               # Static assets
+├── astro.config.mjs      # Astro config (managed by Kleap)
+└── package.json          # Dependencies
 ```
 
 ## Understanding the Code
@@ -47,17 +47,17 @@ A typical Kleap app follows Next.js conventions:
 
 | Technology | Purpose |
 |------------|---------|
-| **Next.js 16** | React framework, routing |
+| **Astro 5** | Static-first web framework, routing |
+| **Tailwind CSS v4** | Utility-first styling |
+| **React 19 islands** | Interactive components |
 | **TypeScript** | Type-safe JavaScript |
-| **Tailwind CSS** | Utility-first styling |
-| **shadcn/ui** | UI component library |
 
 ### Key Files
 
-- `app/page.tsx` - Your homepage
-- `app/layout.tsx` - Root layout (header, footer)
-- `components/` - Your custom components
-- `tailwind.config.ts` - Styling configuration
+- `src/pages/index.astro` - Your homepage
+- `src/layouts/Base.astro` - Root layout (header, footer)
+- `src/components/` - Your custom components
+- `src/styles/global.css` - Global styling
 
 ## Editing Code
 
@@ -84,16 +84,16 @@ A typical Kleap app follows Next.js conventions:
 The AI can reference specific files:
 
 ```
-Look at app/page.tsx and move the hero section
+Look at src/pages/index.astro and move the hero section
 above the features section
 ```
 
 ```
-In components/Header.tsx, change the logo size
+In src/components/Header.astro, change the logo size
 ```
 
 ```
-Update the color scheme in tailwind.config.ts
+Update the color scheme in src/styles/global.css
 ```
 
 ## Exporting Code
@@ -123,7 +123,7 @@ Update the color scheme in tailwind.config.ts
   </Accordion>
 
   <Accordion title="Learn the patterns">
-    Review AI-generated code to learn Next.js and React patterns.
+    Review AI-generated code to learn Astro and React patterns.
   </Accordion>
 </AccordionGroup>
 

@@ -18,8 +18,9 @@ A project management SaaS with:
 ## Prerequisites
 
 - Kleap account
-- Supabase account (free)
-- Stripe account (for payments)
+- Stripe account (for payment links)
+
+Dynamic data and user accounts use **Kleap Database** — a managed Postgres database built into Kleap (with built-in email/password accounts and Row Level Security). It's opt-in: enable it when a step needs it. You don't connect your own database.
 
 ## Step 1: Start with Template
 
@@ -46,6 +47,8 @@ Update the landing page:
 
 ## Step 3: Set Up the Database
 
+Enable **Kleap Database** for this app. It's a managed Postgres database with built-in email/password accounts, so you can link data to the signed-in user and protect it with Row Level Security — no external database to connect.
+
 ### Create Tables
 
 ```
@@ -55,7 +58,7 @@ Create these database tables:
    - id (uuid, primary key)
    - name (text)
    - description (text)
-   - user_id (uuid, references auth.users)
+   - user_id (uuid, references the signed-in Kleap account)
    - created_at (timestamp)
 
 2. tasks
@@ -158,36 +161,36 @@ Update tasks to support assignment:
 - Filter tasks by assignee
 ```
 
-## Step 7: Stripe Integration
+## Step 7: Stripe Billing
 
-### Connect Stripe
+Your Kleap app is a static Astro site, so billing runs on Stripe's hosted pages. You only use your Stripe **publishable** key — never put a secret key (`sk_...`) or webhook handler in a static site.
 
-1. Get Stripe API keys
-2. Add to environment variables:
-   ```
-   STRIPE_SECRET_KEY=sk_...
-   STRIPE_PUBLISHABLE_KEY=pk_...
-   ```
+### Set Up Stripe
 
-### Create Subscription Flow
+1. In your Stripe Dashboard, create a **Payment Link** for each plan (or a subscription **Pricing Table** / **Buy Button**).
+2. Copy each plan's link (or the Pricing Table / Buy Button embed snippet).
+
+### Add Subscribe Buttons
 
 ```
-Add Stripe subscription:
-- Pricing page with plan comparison
-- "Subscribe" buttons that create Stripe checkout sessions
-- Webhook handling for subscription events
-- Update user's plan in database after successful payment
-- Show current plan in settings
+Add Stripe billing to the pricing section:
+- Pricing page comparing the plans (Starter, Pro, Team)
+- Each plan's CTA points to its Stripe Payment Link (or embed a Stripe Pricing Table / Buy Button)
+- Stripe hosts the checkout page and collects payment
+- After payment, Stripe redirects back to a success page on your site
 ```
 
 ### Manage Subscription
 
 ```
-Add subscription management:
-- Current plan display
-- "Manage Subscription" button that opens Stripe portal
-- Cancel subscription option
+Let customers manage their plan:
+- Add a "Manage Subscription" button linking to the Stripe customer portal
+- Stripe handles upgrades, downgrades, and cancellations on its hosted portal
 ```
+
+<Note>
+  Reacting to payment events server-side (Stripe webhooks) or writing the paid plan back into your database needs a backend beyond a static site. For most SaaS MVPs, Stripe's hosted checkout, Pricing Tables, and customer portal cover billing end to end — with no secret keys in your site.
+</Note>
 
 ## Step 8: Polish
 
@@ -224,10 +227,10 @@ Make the dashboard mobile-friendly:
 
 - [ ] All pages load without errors
 - [ ] Auth flow works completely
-- [ ] Database operations work
-- [ ] Stripe checkout works
+- [ ] Kleap Database operations work
+- [ ] Stripe payment links open checkout
 - [ ] Mobile layout is usable
-- [ ] Environment variables set for production
+- [ ] Payment links / buttons point to live Stripe products
 
 ### Deploy
 
@@ -245,7 +248,7 @@ Here's the key prompts in order:
 4. Project detail page with Kanban
 5. Task management features
 6. Team invitation system
-7. Stripe subscription integration
+7. Stripe payment links for billing
 8. Polish and responsive design
 
 ## Next Steps

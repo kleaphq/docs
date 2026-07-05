@@ -5,6 +5,8 @@ description: "Best practices for images in your app"
 
 Learn how to effectively use images in your Kleap app.
 
+Kleap builds **Astro** static sites, so images use standard web patterns — files in your `public/` folder, Astro's optimized `<Image />` component, or plain `<img>` tags. There's no image build configuration to set up.
+
 ## Adding Images
 
 ### From URL
@@ -15,53 +17,67 @@ Use any public image URL:
 "Add a hero image using this URL: https://example.com/hero.jpg"
 ```
 
+External images work with a normal `<img>` tag — no allowlist or domain configuration required.
+
 ### Uploading Images
 
-Upload to your app's public folder:
+Upload images directly in Kleap and the AI will place them for you:
 
 ```
-"Add an image to the about page. I'll upload it to the public folder."
+"Add an image to the about page." (then attach or upload your image)
 ```
 
-Images go in `public/` and are accessible at `/image-name.jpg`.
+Uploaded images are hosted by Kleap and stored in your app's `public/` folder, accessible at `/image-name.jpg`.
 
-### AI-Generated Placeholders
+### Generate Images with AI
 
-For development, use placeholder services:
+Kleap can generate images for you with AI — free, no credits used:
 
 ```
-"Use placeholder images from Unsplash for the team section.
-Search for professional headshots."
+"Generate a hero image of a modern office workspace for the homepage."
 ```
 
-## Next.js Image Component
+Great for hero backgrounds, illustrations, and placeholders when you don't have your own photos yet.
 
-Always use the Next.js Image component for optimization:
+## Astro Image Component
 
-```typescript
-import Image from 'next/image';
+For images you ship with your site, use Astro's built-in `<Image />` component from `astro:assets`. Put the source in `src/assets/` and import it:
 
-<Image
-  src="/hero.jpg"
-  alt="Hero image"
-  width={1200}
-  height={600}
-  priority
-/>
+```astro
+---
+import { Image } from 'astro:assets';
+import hero from '../assets/hero.jpg';
+---
+
+<Image src={hero} alt="Hero image" width={1200} height={600} />
 ```
 
 ### Benefits
 
-- **Automatic optimization** - WebP/AVIF conversion
-- **Lazy loading** - Images load as needed
-- **Responsive** - Serves correct size
-- **No layout shift** - Prevents CLS
+- **Automatic optimization** - Converts to WebP/AVIF
+- **Lazy loading** - `loading="lazy"` by default
+- **Correct sizing** - Serves an appropriately sized image
+- **No layout shift** - Requires width/height, which prevents CLS
 
-### Ask AI to Convert
+### Plain img tags
+
+For images in `public/` (including uploaded and AI-generated ones), a normal `<img>` works too — just add `width`, `height`, and `loading="lazy"`:
+
+```html
+<img src="/hero.jpg" alt="Hero image" width="1200" height="600" loading="lazy" />
+```
+
+For a hero image (usually your largest, above-the-fold visual), load it eagerly so it appears fast:
+
+```html
+<img src="/hero.jpg" alt="Hero" width="1600" height="900" loading="eager" fetchpriority="high" />
+```
+
+### Ask AI to Optimize
 
 ```
-"Convert all img tags to Next.js Image components with
-proper width, height, and alt text"
+"Optimize all images: use Astro's <Image /> where possible, add
+correct width and height, lazy loading, and descriptive alt text."
 ```
 
 ## Image Best Practices
@@ -85,31 +101,29 @@ Keep images optimized:
 
 ### Dimensions
 
-Provide images at appropriate sizes:
+Provide images at appropriate sizes. For responsive images, tell the browser which size to load with the `widths` and `sizes` props:
 
-```typescript
-// For responsive images
+```astro
 <Image
-  src="/product.jpg"
+  src={product}
   alt="Product"
+  widths={[400, 800, 1200]}
   sizes="(max-width: 768px) 100vw, 50vw"
-  fill
 />
 ```
 
 ## Responsive Images
 
-### Fill Mode
+### Cover a Container
 
-For flexible sizing:
+To fill a container while keeping aspect ratio, size the wrapper and use `object-cover`:
 
-```typescript
-<div className="relative w-full h-64">
-  <Image
+```html
+<div class="relative w-full h-64">
+  <img
     src="/hero.jpg"
     alt="Hero"
-    fill
-    className="object-cover"
+    class="absolute inset-0 w-full h-full object-cover"
   />
 </div>
 ```
@@ -118,70 +132,48 @@ For flexible sizing:
 
 Tell the browser what size to load:
 
-```typescript
+```astro
 <Image
-  src="/photo.jpg"
+  src={photo}
   alt="Photo"
-  width={800}
-  height={600}
+  widths={[640, 1024, 1280]}
   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
 />
 ```
 
 ## External Images
 
-### Configure Domains
+For images hosted elsewhere (Unsplash, a CDN, your own server), just reference the URL with a plain `<img>`:
 
-For external images, add to config:
-
-```
-"I want to use images from unsplash.com.
-Can you add it to the Next.js image configuration?"
-```
-
-```typescript
-// next.config.js
-module.exports = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-    ],
-  },
-};
+```html
+<img
+  src="https://images.unsplash.com/photo-123"
+  alt="Team collaborating"
+  loading="lazy"
+/>
 ```
 
-### Common Domains
-
-Popular image services:
+No domain allowlist or config is needed — Astro sites serve external image URLs directly. Popular sources include:
 
 - `images.unsplash.com`
 - `cdn.pixabay.com`
 - `res.cloudinary.com`
-- Your Supabase storage URL
 
-## User-Uploaded Images
+## Uploaded & Generated Images
 
-### Supabase Storage
+Most images on a Kleap site are static assets — files you upload in Kleap or generate with AI. These are hosted by Kleap in your `public/` folder, so you reference them like any local image:
 
-Store user uploads in Supabase:
-
+```html
+<img
+  src="/team-photo.jpg"
+  alt="Our team at the office"
+  width="800"
+  height="600"
+  loading="lazy"
+/>
 ```
-"Add image upload functionality that saves to Supabase storage
-and displays in the user's profile"
-```
 
-### Display from Storage
-
-```typescript
-const imageUrl = supabase.storage
-  .from('avatars')
-  .getPublicUrl(fileName);
-
-<Image src={imageUrl} alt="Avatar" width={100} height={100} />
-```
+If you need to accept image uploads from your own visitors at runtime, store them in Kleap Database and render them from the stored URL. For most sites, static uploaded or AI-generated assets are all you need.
 
 ## Background Images
 
@@ -189,22 +181,19 @@ const imageUrl = supabase.storage
 
 For decorative backgrounds:
 
-```typescript
-<div
-  className="bg-cover bg-center h-96"
-  style={{ backgroundImage: 'url(/pattern.svg)' }}
->
+```html
+<div class="bg-cover bg-center h-96" style="background-image: url(/pattern.svg)">
   Content here
 </div>
 ```
 
 ### With Overlay
 
-```typescript
-<div className="relative h-96">
-  <Image src="/hero.jpg" alt="" fill className="object-cover" />
-  <div className="absolute inset-0 bg-black/50" />
-  <div className="relative z-10 text-white">
+```html
+<div class="relative h-96">
+  <img src="/hero.jpg" alt="" class="absolute inset-0 w-full h-full object-cover" />
+  <div class="absolute inset-0 bg-black/50"></div>
+  <div class="relative z-10 text-white">
     Content here
   </div>
 </div>
@@ -214,9 +203,9 @@ For decorative backgrounds:
 
 ### Lucide Icons
 
-Kleap uses Lucide icons (via shadcn/ui):
+Kleap uses Lucide icons via `lucide-react`, rendered inside React islands:
 
-```typescript
+```tsx
 import { Home, Settings, User } from 'lucide-react';
 
 <Home className="w-6 h-6" />
@@ -226,9 +215,9 @@ import { Home, Settings, User } from 'lucide-react';
 
 For custom icons:
 
-```typescript
-<svg className="w-6 h-6" viewBox="0 0 24 24">
-  {/* SVG paths */}
+```html
+<svg class="w-6 h-6" viewBox="0 0 24 24">
+  <!-- SVG paths -->
 </svg>
 ```
 
@@ -236,21 +225,21 @@ For custom icons:
 
 Always provide descriptive alt text:
 
-```typescript
-// ❌ Bad
-<Image src="/team.jpg" alt="image" />
-<Image src="/team.jpg" alt="" />
+```html
+<!-- ❌ Bad -->
+<img src="/team.jpg" alt="image" />
+<img src="/team.jpg" alt="" />
 
-// ✅ Good
-<Image src="/team.jpg" alt="Our team of five developers at the office" />
+<!-- ✅ Good -->
+<img src="/team.jpg" alt="Our team of five developers at the office" />
 ```
 
 ### When to Use Empty Alt
 
 Decorative images that don't convey information:
 
-```typescript
-<Image src="/decoration.svg" alt="" role="presentation" />
+```html
+<img src="/decoration.svg" alt="" role="presentation" />
 ```
 
 ## Common Image Patterns
@@ -272,8 +261,8 @@ images in a lightbox when clicked"
 ### Avatar
 
 ```
-"Add user avatars to the comments section using the
-user's profile image from Supabase storage"
+"Add user avatars to the comments section using each
+person's profile image"
 ```
 
 ## Troubleshooting
@@ -281,20 +270,20 @@ user's profile image from Supabase storage"
 <AccordionGroup>
   <Accordion title="Image not loading">
     - Check the file path is correct
-    - Verify image exists in public folder
-    - For external images, check domain is configured
+    - Verify the image exists in the public folder
+    - For external images, confirm the URL is public and reachable
   </Accordion>
 
   <Accordion title="Image looks blurry">
-    - Provide higher resolution source image
-    - Check width/height props match aspect ratio
-    - Use quality prop for higher quality
+    - Provide a higher resolution source image
+    - Check width/height props match the aspect ratio
+    - Prefer Astro's `<Image />` so the right size is served
   </Accordion>
 
   <Accordion title="Layout shift when loading">
     - Always specify width and height
-    - Use placeholder="blur" for blur-up effect
-    - Use fill with sized container
+    - Use Astro's `<Image />`, which reserves space automatically
+    - Wrap in a sized container for cover/fill layouts
   </Accordion>
 </AccordionGroup>
 

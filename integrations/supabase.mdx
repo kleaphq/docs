@@ -1,274 +1,102 @@
 ---
-title: "Supabase"
-description: "Database, authentication, and storage for your apps"
+title: "Kleap Database"
+description: "A built-in database and user accounts for your app"
 ---
 
-Supabase provides the backend infrastructure for Kleap apps: database, auth, storage, and real-time features.
-
-## What is Supabase?
-
-Supabase is an open-source Firebase alternative offering:
-
-- **PostgreSQL Database** - Relational database with SQL
-- **Authentication** - User signup, login, OAuth
-- **Storage** - File uploads and media
-- **Real-time** - Live data subscriptions
-- **Edge Functions** - Serverless backend logic
-
-## Connecting Supabase
-
-### First-Time Setup
-
-1. Go to **Settings** > **Supabase**
-2. Click **Connect Supabase**
-3. Sign in to Supabase (or create account)
-4. Authorize Kleap
-5. Connection saved
-
-### Creating a Database
-
-After connecting:
-
-1. Go to **Settings** > **Database**
-2. Click **Create Database**
-3. Choose a region (closest to your users)
-4. Database created in ~60 seconds
+**Kleap Database** is a built-in database and authentication system for your site. When your app needs to save data or let people log in, Kleap can add a real database — powered by **Postgres with row-level security** — without you managing any infrastructure.
 
 <Info>
-  Each app can have its own database, or multiple apps can share one.
+  Kleap Database is **optional and added on demand**. A simple marketing or landing site doesn't need it — it stays fast and static. You add a database only when your app needs stored data or user accounts.
 </Info>
 
-## Database Features
+## When to Use It
 
-### Tables
+Use **Kleap Database** when your app needs to:
 
-Store your app's data in tables:
+- Save records that persist (bookings, orders, reviews, submissions you query)
+- Let visitors **create accounts and log in**
+- Show each user their own private data
 
-```
-Example: Blog App
-- users (id, email, name, avatar)
-- posts (id, title, content, author_id, created_at)
-- comments (id, post_id, user_id, text)
-```
+Use **[Forms & Data](/features/forms-data)** instead when you just need to collect contact/lead/newsletter submissions — forms already save to your dashboard and send email notifications, with zero setup.
 
-### Creating Tables via AI
+## Adding a Database
 
-Ask Kleap to create tables:
+The easiest way is to ask the AI:
 
 ```
-Create a database table for blog posts with title,
-content, author, and published date
+Add a booking system where visitors pick a date and time,
+and store the bookings in a database
 ```
 
-The AI generates and applies the migration.
-
-### Row Level Security (RLS)
-
-Control data access at the database level:
-
-```sql
--- Users can only read their own data
-CREATE POLICY "Users read own data"
-ON users FOR SELECT
-USING (auth.uid() = id);
-
--- Users can only update their own posts
-CREATE POLICY "Authors update posts"
-ON posts FOR UPDATE
-USING (auth.uid() = author_id);
 ```
+Add user accounts with email and password login,
+and a dashboard where each user sees their own data
+```
+
+Kleap provisions the database for that app and wires up the code. You can also enable it from the **Database** integration in your project settings.
+
+## User Accounts
+
+Kleap Database includes ready-made authentication for **your site's visitors** — email and password sign-up and login, with pre-built UI components.
+
+```
+Add a login and signup page, and protect the /dashboard
+page so only logged-in users can see it
+```
+
+Behind the scenes each user only sees their own rows (enforced by row-level security), so data stays private by default.
 
 <Warning>
-  Always enable RLS on tables containing user data. This is critical for security.
+  Your site's user accounts (visitors logging into **your** app) are separate from your **Kleap account** (how you log in to build). They're two different systems.
 </Warning>
 
-## Authentication
+## Viewing Your Data
 
-### Built-in Auth Methods
+Once a database is added, you can browse your tables and rows from the project's **Database** panel in the dashboard — no SQL required.
 
-- **Email/Password** - Traditional signup
-- **Magic Link** - Passwordless email login
-- **OAuth Providers** - Google, GitHub, etc.
+## Working with Data
 
-### Adding Auth via AI
+You describe changes in plain language and Kleap handles the schema and queries:
 
 ```
-Add user authentication with email signup and Google login
-```
-
-Kleap sets up:
-- Supabase Auth configuration
-- Login/signup pages
-- Protected routes
-- User session handling
-
-### Auth Code Example
-
-```typescript
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(url, key);
-
-// Sign up
-const { data, error } = await supabase.auth.signUp({
-  email: 'user@example.com',
-  password: 'securepassword'
-});
-
-// Sign in
-const { data, error } = await supabase.auth.signInWithPassword({
-  email: 'user@example.com',
-  password: 'securepassword'
-});
-
-// Get current user
-const { data: { user } } = await supabase.auth.getUser();
-
-// Sign out
-await supabase.auth.signOut();
-```
-
-## Storage
-
-### File Uploads
-
-Store images, documents, and media:
-
-```typescript
-// Upload file
-const { data, error } = await supabase.storage
-  .from('avatars')
-  .upload('public/avatar.png', file);
-
-// Get public URL
-const { data } = supabase.storage
-  .from('avatars')
-  .getPublicUrl('public/avatar.png');
-```
-
-### Storage Buckets
-
-Organize files in buckets:
-
-| Bucket | Access | Use Case |
-|--------|--------|----------|
-| **public** | Anyone | Public images, assets |
-| **private** | Authenticated | User uploads |
-| **avatars** | Per-user | Profile pictures |
-
-## Real-time Subscriptions
-
-Get live updates when data changes:
-
-```typescript
-// Subscribe to changes
-const subscription = supabase
-  .channel('posts')
-  .on('postgres_changes', {
-    event: '*',
-    schema: 'public',
-    table: 'posts'
-  }, (payload) => {
-    console.log('Change:', payload);
-  })
-  .subscribe();
-```
-
-Use cases:
-- Live chat
-- Real-time dashboards
-- Collaborative editing
-- Notifications
-
-## Edge Functions
-
-Run server-side code:
-
-```typescript
-// supabase/functions/hello/index.ts
-Deno.serve(async (req) => {
-  const { name } = await req.json();
-  return new Response(
-    JSON.stringify({ message: `Hello ${name}!` }),
-    { headers: { 'Content-Type': 'application/json' } }
-  );
-});
-```
-
-## Database Management
-
-### Via Kleap
-
-Ask the AI to make database changes:
-
-```
-Add a "likes" column to the posts table
+Add a "status" field to bookings with values pending, confirmed, cancelled
 ```
 
 ```
-Create a table for storing user notifications
+Create a reviews table with name, rating, and comment
 ```
 
-### Via Supabase Dashboard
+Generated pages read and write data with a simple client (scoped per user by row-level security):
 
-1. Go to [supabase.com/dashboard](https://supabase.com/dashboard)
-2. Select your project
-3. Use Table Editor, SQL Editor, or Auth settings
+```tsx
+// Illustrative — Kleap writes this for you
+import { db } from "@/lib/kleap-db";
 
-## Supabase Pricing
+// Read
+const { data: bookings } = await db.from("bookings").select("*");
 
-| Plan | Database | Storage | Auth | Price |
-|------|----------|---------|------|-------|
-| **Free** | 500 MB | 1 GB | 50K MAU | $0 |
-| **Pro** | 8 GB | 100 GB | 100K MAU | $25/mo |
-| **Team** | Unlimited | Unlimited | Unlimited | $599/mo |
-
-<Tip>
-  Free tier is generous for most apps. You can upgrade anytime as you grow.
-</Tip>
+// Write
+await db.from("bookings").insert({ date, time, name });
+```
 
 ## Best Practices
 
 <AccordionGroup>
-  <Accordion title="Enable RLS on all tables">
-    Row Level Security is your primary defense against data leaks.
+  <Accordion title="Only add a database when you need one">
+    Static sites are faster and simpler. Add Kleap Database when your app genuinely needs stored data or logins.
   </Accordion>
-
-  <Accordion title="Use proper data types">
-    Use appropriate PostgreSQL types: `uuid` for IDs, `timestamptz` for dates, `jsonb` for flexible data.
+  <Accordion title="Use Forms for simple submissions">
+    Contact and lead forms are better served by built-in Forms, which notify you by email automatically.
   </Accordion>
-
-  <Accordion title="Index frequently queried columns">
-    Add indexes to columns used in WHERE clauses and JOINs for better performance.
-  </Accordion>
-
-  <Accordion title="Don't expose service key">
-    Only use the public `anon` key in client code. Keep the `service_role` key secret.
+  <Accordion title="Let row-level security do its job">
+    Each user sees only their own data by default. Keep it that way for anything private.
   </Accordion>
 </AccordionGroup>
 
-## Troubleshooting
+## A Note on Supabase
 
-<AccordionGroup>
-  <Accordion title="Database connection failed">
-    - Check your Supabase project is active
-    - Verify environment variables are set
-    - Ensure project hasn't been paused (free tier pauses after inactivity)
-  </Accordion>
+Earlier versions of Kleap asked you to connect your own **Supabase** project for a database. That's no longer needed — **Kleap Database** is built in and managed for you. (Kleap's own platform still runs on Supabase internally, but your site uses Kleap Database.)
 
-  <Accordion title="Auth not working">
-    - Enable the auth provider in Supabase dashboard
-    - Check redirect URLs are configured
-    - Verify site URL is set correctly
-  </Accordion>
-
-  <Accordion title="RLS blocking access">
-    - Check your policies allow the intended operations
-    - Verify `auth.uid()` is correct for the logged-in user
-    - Test policies in Supabase SQL Editor
-  </Accordion>
-</AccordionGroup>
-
-<Card title="Security Best Practices" icon="shield-check" href="/features/security">
-  Learn how to secure your Supabase database
+<Card title="Collect submissions with Forms" icon="table" href="/features/forms-data">
+  For contact and lead forms, use built-in Forms
 </Card>

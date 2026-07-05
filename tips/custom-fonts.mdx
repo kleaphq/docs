@@ -16,51 +16,44 @@ using Google Fonts"
 
 ### Implementation
 
-```typescript
-// app/layout.tsx
-import { Inter, Roboto } from 'next/font/google';
+Add the Google Fonts `<link>` tags in the `<head>` of your base layout:
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-});
-
-const roboto = Roboto({
-  weight: ['400', '500', '700'],
-  subsets: ['latin'],
-  variable: '--font-roboto',
-});
-
-export default function RootLayout({ children }) {
-  return (
-    <html className={`${inter.variable} ${roboto.variable}`}>
-      <body>{children}</body>
-    </html>
-  );
-}
+```astro
+---
+// src/layouts/Base.astro
+---
+<html lang="en">
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
 ```
 
 ### Using in Tailwind
 
-```typescript
-// tailwind.config.ts
-module.exports = {
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['var(--font-inter)'],
-        heading: ['var(--font-roboto)'],
-      },
-    },
-  },
-};
+Map the fonts to Tailwind font families so you can use utility classes:
+
+```css
+/* src/styles/global.css */
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-heading: "Roboto", system-ui, sans-serif;
+}
 ```
 
 Then use in components:
 
-```typescript
-<h1 className="font-heading">Heading</h1>
-<p className="font-sans">Body text</p>
+```astro
+<h1 class="font-heading">Heading</h1>
+<p class="font-sans">Body text</p>
 ```
 
 ## Popular Font Combinations
@@ -110,26 +103,33 @@ public/
 
 ### Configure
 
-```typescript
-// app/layout.tsx
-import localFont from 'next/font/local';
+Declare the font with `@font-face` in your global stylesheet, pointing at the
+files in `public/` (served from the site root):
 
-const myFont = localFont({
-  src: [
-    {
-      path: '../public/fonts/MyFont-Regular.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/MyFont-Bold.woff2',
-      weight: '700',
-      style: 'normal',
-    },
-  ],
-  variable: '--font-myfont',
-});
+```css
+/* src/styles/global.css */
+@font-face {
+  font-family: "MyFont";
+  src: url("/fonts/MyFont-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MyFont";
+  src: url("/fonts/MyFont-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-brand: "MyFont", system-ui, sans-serif;
+}
 ```
+
+Then use `class="font-brand"` on your headings or body text.
 
 ## Font Weights
 
@@ -149,13 +149,11 @@ Common weight names:
 
 ### Loading Specific Weights
 
-Only load what you need for better performance:
+Only load what you need for better performance. Request just those weights in
+your Google Fonts `<link>` URL:
 
-```typescript
-const inter = Inter({
-  weight: ['400', '600', '700'], // Only these weights
-  subsets: ['latin'],
-});
+```
+https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap
 ```
 
 ## Font Performance
@@ -167,14 +165,15 @@ const inter = Inter({
 3. **Use font-display: swap** - Shows fallback while loading
 4. **Subset fonts** - Only latin if that's all you need
 
-### Next.js Font Optimization
+### Reduce Layout Shift
 
-Next.js automatically:
+To keep fonts fast and avoid layout shift:
 
-- Self-hosts fonts (no external requests)
-- Preloads fonts
-- Eliminates layout shift
-- Optimizes loading
+- **Self-host** the `.woff2` files in `public/fonts/` (no external request) when
+  you want zero third-party calls
+- **Preconnect / preload** the font in your base layout's `<head>`
+- **Use `font-display: swap`** so text shows in a fallback while the font loads
+- **Set a matching fallback** font family so the swap is barely noticeable
 
 ## Typography Scale
 
@@ -196,34 +195,30 @@ Use Tailwind's typography scale:
 
 ### Custom Scale
 
-```typescript
-// tailwind.config.ts
-module.exports = {
-  theme: {
-    extend: {
-      fontSize: {
-        'hero': ['4.5rem', { lineHeight: '1.1' }],
-        'subtitle': ['1.25rem', { lineHeight: '1.6' }],
-      },
-    },
-  },
-};
+```css
+/* src/styles/global.css */
+@theme {
+  --text-hero: 4.5rem;
+  --text-hero--line-height: 1.1;
+  --text-subtitle: 1.25rem;
+  --text-subtitle--line-height: 1.6;
+}
 ```
 
 ## Line Height & Spacing
 
 ### Line Height
 
-```typescript
-<p className="leading-relaxed">Comfortable reading</p>
-<p className="leading-tight">Compact text</p>
+```astro
+<p class="leading-relaxed">Comfortable reading</p>
+<p class="leading-tight">Compact text</p>
 ```
 
 ### Letter Spacing
 
-```typescript
-<h1 className="tracking-tight">Tight headings</h1>
-<span className="tracking-wide uppercase">Labels</span>
+```astro
+<h1 class="tracking-tight">Tight headings</h1>
+<span class="tracking-wide uppercase">Labels</span>
 ```
 
 ## Common Font Tasks
@@ -251,26 +246,30 @@ the primary heading font."
 
 ## Font Fallbacks
 
-Always specify fallbacks:
+Always specify fallbacks in your Tailwind theme:
 
-```typescript
-fontFamily: {
-  sans: ['Inter', 'system-ui', 'sans-serif'],
-  serif: ['Georgia', 'serif'],
-  mono: ['Fira Code', 'monospace'],
+```css
+/* src/styles/global.css */
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: "Fira Code", monospace;
 }
 ```
 
 ## Variable Fonts
 
-Modern fonts with adjustable properties:
+Modern fonts with adjustable properties. Load the single variable `.woff2` and
+declare a weight range with `@font-face`:
 
-```typescript
-const inter = Inter({
-  subsets: ['latin'],
-  // Variable font - all weights included
-  display: 'swap',
-});
+```css
+/* src/styles/global.css */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Variable.woff2") format("woff2");
+  font-weight: 100 900; /* full range in one file */
+  font-display: swap;
+}
 ```
 
 Benefits:
@@ -282,22 +281,22 @@ Benefits:
 
 <AccordionGroup>
   <Accordion title="Font not loading">
-    - Check font name spelling
-    - Verify weight exists for that font
-    - Check browser console for errors
-    - Ensure font is properly configured in layout
+    - Check font name spelling (must match the `@font-face`/`<link>` exactly)
+    - Verify the weight exists for that font
+    - Check the browser console for errors
+    - Ensure the `<link>` is in the base layout `<head>`, or the font file exists in `public/fonts/`
   </Accordion>
 
   <Accordion title="Flash of unstyled text">
-    - Next.js font optimization should handle this
-    - Check font-display is set to 'swap'
-    - Ensure fonts are loading with Next.js font system
+    - Make sure `font-display: swap` is set (in the Google Fonts URL or your `@font-face`)
+    - Preconnect/preload the font in the base layout `<head>`
+    - Set a matching fallback font family so the swap is barely noticeable
   </Accordion>
 
   <Accordion title="Font looks different than expected">
     - Verify you loaded the correct weight
     - Check CSS isn't overriding font settings
-    - Ensure variable is applied to html/body
+    - Ensure the Tailwind font family (e.g. `font-heading`) is applied to your element
   </Accordion>
 </AccordionGroup>
 

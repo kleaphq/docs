@@ -3,15 +3,22 @@ title: "GitHub"
 description: "Version control and code backup with GitHub"
 ---
 
-Push your Kleap app code to GitHub for version control, backup, and collaboration.
+Push your Kleap app code to GitHub for version control, backup, and code ownership.
 
 ## Why GitHub?
 
 - **Version control** - Track every change with Git
 - **Backup** - Code stored safely in the cloud
 - **Collaboration** - Work with developers
-- **CI/CD** - Trigger deployments from commits
-- **Portability** - Take your code anywhere
+- **Two-way sync** - Changes flow both directions automatically
+- **Portability** - Own and take your Astro source code anywhere
+
+<Info>
+  GitHub is for **backup, code ownership, and two-way sync** — it is **not** how your
+  site goes live. Kleap deploys your app automatically to Cloudflare at
+  `{your-app}.kleap.io` whenever you publish. Pushing to GitHub does **not** deploy
+  anything.
+</Info>
 
 ## Connecting GitHub
 
@@ -58,6 +65,10 @@ Push your Kleap app code to GitHub for version control, backup, and collaboratio
 
 ## Syncing Changes
 
+Sync works in both directions: push to GitHub and Kleap syncs the changes in, and
+changes made in Kleap are pushed back to GitHub. A last-commit-sha guard prevents
+sync loops between the two sides.
+
 ### Push to GitHub
 
 After making changes in Kleap:
@@ -77,18 +88,21 @@ Enable automatic syncing:
 
 ## Repository Structure
 
-Your GitHub repo contains the full Next.js project:
+Your GitHub repo contains the full Astro project — an Astro 5 static site with
+Tailwind v4, React 19 islands, and TypeScript:
 
 ```
 your-app/
-├── app/                  # Pages and routes
-├── components/           # React components
-├── lib/                  # Utilities
+├── src/
+│   ├── pages/            # .astro pages and routes
+│   ├── components/       # .astro and .tsx (React island) components
+│   ├── layouts/
+│   │   └── Base.astro    # Shared page layout
+│   └── styles/
+│       └── global.css    # Tailwind v4 styles
 ├── public/               # Static assets
-├── styles/               # CSS files
+├── astro.config.mjs      # Astro config
 ├── package.json          # Dependencies
-├── next.config.js        # Next.js config
-├── tailwind.config.ts    # Tailwind config
 └── tsconfig.json         # TypeScript config
 ```
 
@@ -141,7 +155,12 @@ Your repository can use GitHub Actions for:
 
 - **Automated testing** - Run tests on push
 - **Code quality** - Lint and format checks
-- **Deployment** - Deploy on merge to main
+- **Build checks** - Verify the Astro build passes
+
+<Note>
+  GitHub Actions run inside GitHub only. They don't publish your Kleap site —
+  deployment stays automatic through Kleap (to Cloudflare at `{your-app}.kleap.io`).
+</Note>
 
 ### Example Workflow
 

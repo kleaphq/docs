@@ -1,72 +1,57 @@
 ---
-title: "Stripe"
-description: "Accept payments and manage subscriptions"
+title: "Payments"
+description: "Accept payments on your Kleap site with Stripe"
 ---
 
-Add payment processing to your Kleap app using Stripe.
+You can accept payments on your Kleap site using **Stripe**. Because Kleap sites are fast, mostly-static websites, the simplest and safest way to sell is with **Stripe Payment Links** and **Buy Buttons** — no server or secret keys required.
 
-## What is Stripe?
+<Info>
+  Stripe Payment Links and Buy Buttons are hosted by Stripe and embed with a public key only. That means no sensitive keys ever live in your site's code — which is safer and works perfectly with a static site.
+</Info>
 
-Stripe is a payment platform for:
+## The Easy Way: Payment Links
 
-- **One-time payments** - Charge for products or services
-- **Subscriptions** - Recurring billing
-- **Checkout** - Pre-built payment pages
-- **Invoicing** - Send and manage invoices
+A **Payment Link** is a Stripe-hosted checkout page you can link to from any button.
 
-## Getting Started
+<Steps>
+  <Step title="Create products in Stripe">
+    In your [Stripe Dashboard](https://dashboard.stripe.com), create a product and price (one-time or subscription).
+  </Step>
+  <Step title="Create a Payment Link">
+    Go to **Payment Links** → **New**, pick your product, and copy the link (looks like `https://buy.stripe.com/...`).
+  </Step>
+  <Step title="Add it to your site">
+    Ask the AI to add a buy button:
 
-### Use a Payment Template
+    ```
+    Add a "Buy now" button in the pricing section that links to
+    https://buy.stripe.com/your-link-here
+    ```
+  </Step>
+</Steps>
 
-The easiest way to add payments is starting with a template:
+That's it — clicks go to Stripe's secure checkout, and Stripe handles payment, receipts, and (for subscriptions) recurring billing.
 
-1. Create new app
-2. Choose **SaaS Template** or similar
-3. Stripe integration is pre-configured
-4. Connect your Stripe account
+## Buy Buttons & Pricing Tables
 
-### Add Payments to Existing App
-
-Ask Kleap to add Stripe:
+Stripe also offers embeddable **Buy Buttons** and **Pricing Tables** you can drop into a page. Create one in Stripe, then:
 
 ```
-Add Stripe payment integration with checkout for a $29/month subscription
+Embed this Stripe pricing table on my Pricing page:
+<stripe-pricing-table pricing-table-id="..." publishable-key="pk_live_...">
+</stripe-pricing-table>
 ```
-
-## Connecting Stripe
-
-### Create Stripe Account
-
-1. Go to [stripe.com](https://stripe.com)
-2. Sign up for an account
-3. Complete business verification
-
-### Get API Keys
-
-1. Go to Stripe Dashboard → Developers → API keys
-2. Copy your keys:
-   - **Publishable key** (`pk_test_...` or `pk_live_...`)
-   - **Secret key** (`sk_test_...` or `sk_live_...`)
-
-### Add to Kleap
-
-1. Go to **Settings** > **Environment**
-2. Add variables:
-   ```
-   STRIPE_PUBLISHABLE_KEY=pk_test_...
-   STRIPE_SECRET_KEY=sk_test_...
-   ```
 
 <Warning>
-  Never expose your secret key in client-side code. Only use it in API routes.
+  Only ever use your **publishable key** (`pk_live_...` / `pk_test_...`) in your site. **Never** put a **secret key** (`sk_...`) in a website — it must stay private.
 </Warning>
 
 ## Test vs Live Mode
 
-| Mode | Keys | Use |
-|------|------|-----|
-| **Test** | `pk_test_`, `sk_test_` | Development, testing |
-| **Live** | `pk_live_`, `sk_live_` | Real payments |
+| Mode | Keys / Links | Use |
+|------|-------------|-----|
+| **Test** | Test-mode payment links, `pk_test_` | Try the flow safely |
+| **Live** | Live payment links, `pk_live_` | Real payments |
 
 ### Test Card Numbers
 
@@ -78,214 +63,35 @@ Use these in test mode:
 | `4000 0000 0000 0002` | Declined |
 | `4000 0000 0000 3220` | Requires 3D Secure |
 
-## Common Payment Flows
+## Advanced: Custom Checkout
 
-### Stripe Checkout
-
-Pre-built, hosted payment page:
-
-```typescript
-// API route to create checkout session
-import Stripe from 'stripe';
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
-export async function POST(request: Request) {
-  const session = await stripe.checkout.sessions.create({
-    mode: 'subscription',
-    payment_method_types: ['card'],
-    line_items: [{
-      price: 'price_xxx', // Your Stripe price ID
-      quantity: 1,
-    }],
-    success_url: `${origin}/success`,
-    cancel_url: `${origin}/canceled`,
-  });
-
-  return Response.json({ url: session.url });
-}
-```
-
-### Subscription Management
-
-Handle subscription lifecycle:
-
-```typescript
-// Create customer portal session
-const portalSession = await stripe.billingPortal.sessions.create({
-  customer: customerId,
-  return_url: `${origin}/account`,
-});
-```
-
-## Products and Prices
-
-### Create in Stripe Dashboard
-
-1. Go to Products → Add product
-2. Set name, description
-3. Add pricing (one-time or recurring)
-4. Copy the Price ID
-
-### Use Price ID in Code
-
-```typescript
-const session = await stripe.checkout.sessions.create({
-  line_items: [{
-    price: 'price_1234567890', // Your price ID
-    quantity: 1,
-  }],
-  // ...
-});
-```
-
-## Webhooks
-
-Handle Stripe events in your app:
-
-### Set Up Webhook
-
-1. In Stripe Dashboard → Webhooks → Add endpoint
-2. Enter your endpoint URL: `https://yourapp.com/api/stripe/webhook`
-3. Select events to listen for
-4. Copy the webhook signing secret
-
-### Handle Events
-
-```typescript
-// app/api/stripe/webhook/route.ts
-import Stripe from 'stripe';
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
-export async function POST(request: Request) {
-  const body = await request.text();
-  const signature = request.headers.get('stripe-signature')!;
-
-  const event = stripe.webhooks.constructEvent(
-    body,
-    signature,
-    process.env.STRIPE_WEBHOOK_SECRET!
-  );
-
-  switch (event.type) {
-    case 'checkout.session.completed':
-      // Handle successful payment
-      break;
-    case 'customer.subscription.deleted':
-      // Handle cancellation
-      break;
-  }
-
-  return new Response('OK');
-}
-```
-
-### Important Events
-
-| Event | When |
-|-------|------|
-| `checkout.session.completed` | Payment successful |
-| `customer.subscription.created` | New subscription |
-| `customer.subscription.updated` | Plan changed |
-| `customer.subscription.deleted` | Subscription canceled |
-| `invoice.paid` | Invoice payment successful |
-| `invoice.payment_failed` | Payment failed |
-
-## Pricing Strategies
-
-### One-Time Payment
-
-Best for:
-- Digital products
-- Templates
-- Lifetime access
-
-### Monthly Subscription
-
-Best for:
-- SaaS products
-- Ongoing services
-- Content access
-
-### Tiered Pricing
-
-```
-Free: $0/mo - Basic features
-Pro: $19/mo - Advanced features
-Enterprise: $99/mo - Everything
-```
-
-## Going Live
-
-Before accepting real payments:
-
-<Steps>
-  <Step title="Complete Stripe verification">
-    Verify your business identity in Stripe Dashboard
-  </Step>
-  <Step title="Switch to live keys">
-    Replace test keys with live keys in environment variables
-  </Step>
-  <Step title="Test the flow">
-    Make a real test purchase (refund afterward)
-  </Step>
-  <Step title="Set up webhooks for production">
-    Create live webhook endpoint
-  </Step>
-</Steps>
-
-## Stripe Fees
-
-| Type | Fee |
-|------|-----|
-| Card payments | 2.9% + $0.30 |
-| International | +1.5% |
-| Currency conversion | +1% |
-| Disputes | $15 |
+Fully custom, server-side Stripe flows (dynamic carts, metered billing, custom webhooks) require a backend to hold your secret key. That's beyond a static site — if you need it, you'd pair your site with your own backend or a serverless function. For most sites, Payment Links and Buy Buttons cover selling products, plans, and services.
 
 ## Best Practices
 
 <AccordionGroup>
-  <Accordion title="Always use webhooks">
-    Don't rely on redirect success URLs alone. Webhooks ensure you capture all events.
+  <Accordion title="Use Payment Links for most cases">
+    They're the fastest, safest way to sell on a static site — no keys in your code.
   </Accordion>
-
-  <Accordion title="Store customer IDs">
-    Save Stripe customer IDs in your database to manage subscriptions.
+  <Accordion title="Keep secret keys out of your site">
+    Only publishable keys belong in a website. Secret keys stay in Stripe / a backend.
   </Accordion>
-
-  <Accordion title="Handle failed payments">
-    Implement dunning emails and grace periods for failed subscription payments.
-  </Accordion>
-
-  <Accordion title="Test thoroughly">
-    Test every payment flow in test mode before going live.
+  <Accordion title="Test before going live">
+    Run a test-mode purchase end to end before switching to live links.
   </Accordion>
 </AccordionGroup>
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Webhook signature verification failed">
-    - Ensure you're using the correct webhook secret
-    - Check the raw body isn't being parsed before verification
-    - Verify the webhook URL matches exactly
+  <Accordion title="Button doesn't open checkout">
+    Make sure the button links to a valid `https://buy.stripe.com/...` Payment Link, and that the link is set to **live** mode when you're ready for real payments.
   </Accordion>
-
-  <Accordion title="Payment declined">
-    - Check if using test cards in live mode (or vice versa)
-    - Verify the card details are correct
-    - Check for Radar (fraud) blocks in Stripe Dashboard
-  </Accordion>
-
-  <Accordion title="Subscription not updating">
-    - Check webhook events are being received
-    - Verify your webhook handler processes the events
-    - Check database updates are working
+  <Accordion title="Pricing table not showing">
+    Confirm you used your **publishable** key (`pk_...`) and the correct pricing-table ID from Stripe.
   </Accordion>
 </AccordionGroup>
 
-<Card title="SaaS Dashboard Tutorial" icon="gauge" href="/use-cases/saas-dashboard">
-  Build a complete SaaS with Stripe billing
+<Card title="Selling something bigger?" icon="database" href="/integrations/supabase">
+  Add Kleap Database for orders, accounts, and saved data
 </Card>

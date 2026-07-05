@@ -3,7 +3,7 @@ title: "AI Models"
 description: "The AI technology powering Kleap"
 ---
 
-Kleap uses advanced AI models to understand your requests and generate code.
+Kleap uses advanced AI models to understand your requests and build your site.
 
 ## How Kleap Uses AI
 
@@ -11,49 +11,45 @@ When you send a message, Kleap:
 
 1. **Understands** your intent and context
 2. **Plans** the changes needed
-3. **Generates** high-quality code
-4. **Applies** changes to your app
-5. **Verifies** the result works
+3. **Generates** clean, production-ready code
+4. **Applies** changes to your site
+5. **Verifies** the result builds and looks right
 
-## AI Capabilities
-
-### What AI Can Do
+## What the AI Can Do
 
 <CardGroup cols={2}>
-  <Card title="Create Components" icon="puzzle-piece">
-    Build React components from descriptions
+  <Card title="Build Pages & Sections" icon="puzzle-piece">
+    Turn descriptions into real pages and layouts
   </Card>
-  <Card title="Style Applications" icon="palette">
-    Apply CSS, Tailwind, and design systems
+  <Card title="Style Your Site" icon="palette">
+    Apply colors, typography, spacing, and animations with Tailwind
   </Card>
-  <Card title="Add Functionality" icon="code">
-    Implement features, logic, and interactions
+  <Card title="Add Interactivity" icon="wand-magic-sparkles">
+    Menus, sliders, tabs, and forms via React islands
   </Card>
-  <Card title="Integrate Services" icon="plug">
-    Connect databases, APIs, and third-party services
+  <Card title="Add Data & Accounts" icon="database">
+    Wire up Kleap Database and user logins when needed
   </Card>
-  <Card title="Debug Issues" icon="bug">
-    Find and fix errors in your code
+  <Card title="Optimize for SEO" icon="magnifying-glass">
+    Metadata, structure, and content that ranks
   </Card>
-  <Card title="Refactor Code" icon="arrows-rotate">
-    Improve code structure and organization
+  <Card title="Debug & Refine" icon="bug">
+    Find and fix issues, then iterate
   </Card>
 </CardGroup>
 
-### What AI Does Best
+## What AI Does Best
 
-- **UI Creation** - Turning descriptions into beautiful interfaces
-- **CRUD Operations** - Database interactions and forms
-- **Authentication** - User login and signup flows
-- **Responsive Design** - Mobile-friendly layouts
-- **Common Patterns** - Standard web app features
+- **Beautiful UI** — turning descriptions into polished, responsive designs
+- **Content & SEO** — headings, copy, and structured metadata
+- **Forms & lead capture** — contact, newsletter, and quote forms
+- **Common patterns** — landing pages, portfolios, business sites, blogs
 
-### What Requires More Guidance
+### What Needs More Guidance
 
-- **Complex Business Logic** - Be specific about rules
-- **Custom Algorithms** - Provide clear requirements
-- **Unique Designs** - Reference examples or provide details
-- **Integration Edge Cases** - Specify expected behaviors
+- **Complex business logic** — be specific about the rules
+- **Custom, unique designs** — reference examples or give detail
+- **Advanced integrations** — describe the expected behavior
 
 ## Prompt Tips for Best Results
 
@@ -61,133 +57,70 @@ When you send a message, Kleap:
 
 ```
 ❌ "Make it better"
-✅ "Increase the heading size to 3xl and add more padding around the cards"
+✅ "Increase the hero heading to 3xl and add more padding around the cards"
 ```
 
 ### Provide Context
 
 ```
 ❌ "Add a button"
-✅ "Add a 'Save Draft' button next to the existing 'Publish' button that saves the post without publishing"
+✅ "Add a 'Book a call' button next to the hero heading that links to my Calendly"
 ```
 
 ### Break Down Complex Tasks
 
 Instead of:
+
 ```
-Build a complete e-commerce checkout with cart, shipping, and payment
+Build a full booking site with accounts, payments, and admin
 ```
 
 Try:
+
 ```
-1. "Create a shopping cart component showing items and total"
-2. "Add a shipping address form"
-3. "Integrate Stripe checkout"
+1. "Create a landing page for a barbershop with services and hours"
+2. "Add a booking form that saves to a database"
+3. "Add a Stripe buy button for deposits"
 ```
 
 ## Code Quality
 
-AI-generated code follows best practices:
+AI-generated code follows modern best practices:
 
 | Aspect | Standard |
 |--------|----------|
-| **Framework** | Next.js 16 with App Router |
-| **Language** | TypeScript with proper types |
-| **Styling** | Tailwind CSS utilities |
-| **Components** | shadcn/ui component library |
-| **Structure** | Component-based architecture |
+| **Framework** | Astro 5 (mostly static, fast) |
+| **Styling** | Tailwind CSS v4 |
+| **Interactivity** | React 19 islands where needed |
+| **Language** | TypeScript |
 | **Accessibility** | Semantic HTML, ARIA labels |
+| **SEO** | Metadata and structured markup |
 
 ## Context Understanding
 
 The AI understands:
 
-- **Your entire codebase** - Existing components and patterns
-- **Selected elements** - What you clicked in the preview
-- **Conversation history** - Previous messages in the session
-- **Project structure** - File organization and imports
+- **Your whole site** — existing pages, components, and patterns
+- **Selected elements** — what you clicked in the preview
+- **Conversation history** — earlier messages in the session
 
 <Info>
-  The more you build, the better the AI understands your project's patterns and preferences.
+  The more you build, the better the AI understands your project's style and preferences.
 </Info>
 
-## Token Usage
+## Credits & Usage
 
-Each message uses tokens (similar to words):
-
-- **Input tokens** - Your message and context
-- **Output tokens** - AI's response and code
-
-### Optimizing Token Usage
+Each AI message consumes credits based on how much work it does — see [Plans & Credits](/introduction/plans-and-credits). Tips to get more from each credit:
 
 - Be concise but specific
-- Use element selection to provide context
-- Reference existing components by name
+- Use element selection to point at exactly what you mean
 - Break large tasks into smaller messages
-
-## AI Limitations
-
-Be aware of these limitations:
-
-### Knowledge Cutoff
-
-The AI's training data has a cutoff date. For very recent:
-- Library versions
-- API changes
-- New features
-
-Provide documentation links or examples if needed.
-
-### Context Window
-
-Very large projects may exceed context limits. If this happens:
-- Focus on specific files
-- Reference components by name
-- Break work into sessions
-
-### Non-Deterministic Output
-
-AI may generate slightly different code for the same prompt. This is normal. If you need specific output:
-- Be more precise in your request
-- Provide examples of desired format
-- Use element selection for context
+- Edit plain text directly in the preview (that's free)
 
 ## Privacy & Security
 
-### Your Code
-
-- Code is sent to AI for processing
-- Not used to train future models
-- Processed securely via encrypted connections
-
-### Sensitive Data
-
-<Warning>
-  Never include API keys, passwords, or secrets in prompts. Use environment variables instead.
-</Warning>
-
-## Improving Results
-
-### If AI Gets It Wrong
-
-1. **Clarify** - Rephrase with more detail
-2. **Correct** - Point out what's wrong
-3. **Example** - Show what you expect
-4. **Undo** - Use version history to roll back
-
-### Iteration Tips
-
-```
-"That's close, but change the button color to blue instead of green"
-```
-
-```
-"The layout is good, but make the sidebar fixed instead of scrolling"
-```
-
-```
-"Undo that last change and instead..."
-```
+- Your code is processed securely to build your site
+- **Never** paste secret keys, passwords, or private tokens into prompts
 
 <Card title="Prompting Best Practices" icon="lightbulb" href="/prompting/best-practices">
   Learn how to write effective prompts

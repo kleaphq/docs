@@ -8,10 +8,16 @@ Quick reference for terms used in Kleap and web development.
 ## A
 
 ### API (Application Programming Interface)
-A way for different software applications to communicate. In Kleap, you create API routes to handle server-side logic.
+A way for different software applications to communicate. Kleap sites are static-first; server-side logic and data are handled by the built-in Kleap Database when you need them.
 
 ### API Route
-A server-side endpoint in Next.js that handles requests. Located in `app/api/` directory.
+A server-side endpoint that handles HTTP requests (a common pattern in frameworks like Next.js). Kleap sites are static — use the built-in Kleap Database for dynamic behavior instead.
+
+### app_files
+Kleap's managed store and source of truth for every file in your site. Kleap versions your files for you — there's no repo, sandbox, or local checkout to manage.
+
+### Astro
+The web framework Kleap builds with. Astro 5 produces fast, static-first sites (Tailwind CSS v4, TypeScript) and hydrates interactive React "islands" only where needed.
 
 ### Authentication
 The process of verifying a user's identity, typically through login with email/password or OAuth.
@@ -33,7 +39,7 @@ The compiled JavaScript files that are sent to the browser.
 A network of servers distributed globally that serves your content from the nearest location to users.
 
 ### Client Component
-A React component that runs in the browser. Use `'use client'` directive.
+A React component that runs in the browser. In Astro, add a `client:*` directive (e.g. `client:load`, `client:visible`) to hydrate it as an island.
 
 ### CORS (Cross-Origin Resource Sharing)
 Security mechanism that controls which domains can access your API.
@@ -69,7 +75,7 @@ A variable set outside your code that configures behavior (like API keys).
 The small icon that appears in browser tabs for your website.
 
 ### Framework
-A pre-built structure that provides common functionality. Kleap uses Next.js.
+A pre-built structure that provides common functionality. Kleap builds sites with Astro.
 
 ### Frontend
 The client-side part of an application that users interact with directly.
@@ -101,6 +107,9 @@ The process where React takes over server-rendered HTML and makes it interactive
 ### IDE (Integrated Development Environment)
 A software application for writing code. Kleap has a built-in code editor.
 
+### Island
+An interactive component (such as a React island) hydrated on an otherwise static Astro page. Only islands ship JavaScript, keeping pages fast.
+
 ## J
 
 ### JSX
@@ -112,7 +121,10 @@ A secure way to transmit information between parties, commonly used for authenti
 ## K
 
 ### Kleap
-AI-powered platform for building web applications using natural language.
+AI-powered platform for building Astro websites using natural language.
+
+### Kleap Database
+Kleap's optional built-in database: managed Postgres with Row Level Security and built-in email/password accounts. Enable it on demand — you don't connect your own Supabase.
 
 ## L
 
@@ -120,7 +132,7 @@ AI-powered platform for building web applications using natural language.
 Technique of loading content only when needed, improving initial load time.
 
 ### Layout
-In Next.js, a component that wraps pages and persists across navigation.
+A component that wraps pages to share common structure (header, footer, meta). Astro sites use layout components for this.
 
 ## M
 
@@ -136,7 +148,7 @@ Code that runs between a request and response, often for auth or redirects.
 ## N
 
 ### Next.js
-React framework used by Kleap for building web applications.
+A React framework for building web applications. (Kleap builds Astro sites, not Next.js.)
 
 ### Node.js
 JavaScript runtime that allows JavaScript to run on servers.
@@ -155,10 +167,10 @@ Protocol for controlling how your content appears when shared on social media.
 ## P
 
 ### PostgreSQL
-The relational database system used by Supabase.
+A relational database system. The built-in Kleap Database runs on Postgres.
 
 ### Preview
-The live view of your app during development in Kleap.
+The live view of your site while you build in Kleap — a real, ephemeral Astro build rendered in the editor.
 
 ### Production
 The live version of your app that real users access.
@@ -172,7 +184,7 @@ A web app that can be installed on devices and work offline.
 ## R
 
 ### React
-JavaScript library for building user interfaces, used by Next.js.
+JavaScript library for building user interfaces. In Kleap, React powers interactive islands on Astro pages.
 
 ### Responsive Design
 Design approach that adapts to different screen sizes.
@@ -181,7 +193,7 @@ Design approach that adapts to different screen sizes.
 Architectural style for designing networked applications.
 
 ### RLS (Row Level Security)
-Supabase feature that controls data access at the row level.
+A Postgres feature that controls data access at the row level. Used by the built-in Kleap Database.
 
 ### Route
 A URL path that maps to a specific page or API endpoint.
@@ -192,7 +204,7 @@ A URL path that maps to a specific page or API endpoint.
 Software delivered over the internet on a subscription basis.
 
 ### Sandbox
-Isolated environment where your app runs during development.
+An isolated environment for running code. Kleap previews Astro sites with an ephemeral in-editor build, so there's no persistent sandbox to manage.
 
 ### Schema
 The structure of your database (tables, columns, relationships).
@@ -218,7 +230,7 @@ Open-source Firebase alternative providing database, auth, and storage.
 ## T
 
 ### Tailwind CSS
-Utility-first CSS framework used by Kleap for styling.
+Utility-first CSS framework. Kleap styles Astro sites with Tailwind CSS v4.
 
 ### Template
 Pre-built starting point for creating new apps.

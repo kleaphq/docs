@@ -1,21 +1,21 @@
 ---
-title: "Getting Started"
-description: "How Kleap apps are created"
+title: "What You Can Build"
+description: "The kinds of sites you can create with Kleap"
 ---
 
-Every Kleap app starts from a pre-configured Next.js foundation that's ready to customize with AI.
+Every Kleap site starts from a pre-configured Astro foundation that's ready to customize with AI.
 
 ## How It Works
 
-When you create a new app, Kleap sets up:
+When you create a new site, Kleap sets up:
 
-- **Next.js 16** with App Router
+- **Astro 5** for fast, static-first websites
+- **Tailwind CSS v4** for styling
+- **React 19 islands** for interactivity
 - **TypeScript** for type safety
-- **Tailwind CSS** for styling
-- **shadcn/ui** component library
-- **Supabase** integration ready
+- **Kleap Database** available on demand (opt-in, added when your site needs saved data or logins)
 
-## Building Your App
+## Building Your Site
 
 Instead of choosing from pre-made templates, you describe what you want to build:
 
@@ -25,13 +25,13 @@ features grid, and signup form
 ```
 
 ```
-Build a dashboard with sidebar navigation,
-user profile, and data tables
+Build a business site with services, testimonials,
+opening hours, and a contact form
 ```
 
 ```
-Make an e-commerce product page with
-image gallery, reviews, and add to cart
+Make an e-commerce product page with an image gallery,
+reviews, and a "Buy now" button
 ```
 
 The AI generates exactly what you need, customized to your requirements.
@@ -39,27 +39,31 @@ The AI generates exactly what you need, customized to your requirements.
 ## What You Can Build
 
 <CardGroup cols={2}>
-  <Card title="SaaS Products" icon="rocket">
-    Landing pages, dashboards, billing, user management
+  <Card title="Landing & Marketing" icon="rocket">
+    Product launches, waitlists, pricing and feature pages
   </Card>
-  <Card title="E-commerce" icon="shopping-cart">
-    Product pages, carts, checkout, order management
+  <Card title="Business Sites" icon="briefcase">
+    Restaurants, agencies, local services, contact forms
   </Card>
-  <Card title="Portfolios" icon="briefcase">
-    Project showcases, about pages, contact forms
-  </Card>
-  <Card title="Landing Pages" icon="browser">
-    Marketing pages, waitlists, product launches
-  </Card>
-  <Card title="Internal Tools" icon="wrench">
-    Admin panels, data dashboards, team tools
+  <Card title="Portfolios" icon="palette">
+    Project showcases, about pages, personal sites
   </Card>
   <Card title="Blogs & Content" icon="newspaper">
-    Articles, categories, CMS integration
+    Articles, content pages, SEO-first sites
+  </Card>
+  <Card title="Sell Products" icon="shopping-cart">
+    Product pages and catalogs with Stripe payment links
+  </Card>
+  <Card title="Simple Web Apps" icon="wrench">
+    Logins and saved data with the built-in Kleap Database
   </Card>
 </CardGroup>
 
-## Benefits of AI-First Approach
+<Info>
+  Kleap sites are static and fast by default. Dynamic features — user accounts, saved data — come from the opt-in **Kleap Database**; payments use **Stripe payment links** (no server keys in your site). Advanced server-side flows (custom checkout webhooks, order management) need a separate backend.
+</Info>
+
+## Benefits of the AI-First Approach
 
 | Traditional Templates | Kleap AI Approach |
 |-----------------------|-------------------|
@@ -70,6 +74,6 @@ The AI generates exactly what you need, customized to your requirements.
 
 ## Get Started
 
-<Card title="Create Your First App" icon="play" href="/introduction/getting-started">
+<Card title="Create Your First Site" icon="play" href="/introduction/getting-started">
   Start building in minutes
 </Card>

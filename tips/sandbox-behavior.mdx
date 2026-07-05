@@ -1,176 +1,83 @@
 ---
-title: "Sandbox Behavior"
+title: "Preview & Build Behavior"
 description: "Understanding how the preview environment works"
 ---
 
-Your app runs in a cloud sandbox during development. Here's what you need to know.
+Kleap builds a **static Astro site**. There's no long-running dev server or
+sandbox to manage — here's how preview, builds, and publishing actually work.
 
-## What is the Sandbox?
+## Where Your Files Live
 
-The sandbox is a cloud development environment that:
+Your site's files are stored and managed by Kleap. That managed copy is the
+source of truth — the AI edits it, and every preview and publish builds from it.
+You don't run or maintain a separate environment.
 
-- Runs your Next.js app in real-time
-- Provides instant preview of changes
-- Has its own temporary URL
-- Includes all necessary dependencies
+## Preview
 
-## Preview URL
+When you make a change, Kleap runs a **real, ephemeral build** of your Astro
+site and shows the result in the editor's preview pane.
 
-During development, your app runs at:
-
-```
-https://3000-[sandbox-id].proxy.daytona.works
-```
-
-This URL:
-- Is temporary (not permanent)
-- Requires authentication (tied to your session)
-- Is different each session
-- Only works while actively editing
+- The preview reflects your latest changes after each build
+- It's for you, inside the editor — not a public URL
+- Nothing to "wake up" or restart; there's no idle timeout to hit
 
 <Info>
-  For a permanent, public URL, [publish your app](/features/publishing).
+  For a permanent, public URL, your site is [published automatically](/features/publishing)
+  to `https://your-app.kleap.io`.
 </Info>
 
-## Auto-Stop Behavior
+## Publishing
 
-### When Does It Stop?
+Publishing is **automatic**. When a generation finishes, Kleap builds your site
+and deploys it to the Cloudflare edge at `https://your-app.kleap.io` with free
+SSL. You don't have to click deploy for it to go live.
 
-The sandbox automatically stops after **15 minutes of inactivity**.
+## What's Preserved
 
-Inactivity means:
-- No messages sent in chat
-- No file edits
-- No preview interactions tracked
+| Always saved | Notes |
+|--------------|-------|
+| All your code files | Managed by Kleap, saved continuously |
+| Version history | Roll back to any previous version |
+| Stored data | If you use Kleap Database |
+| Form submissions | Land in your dashboard's Data panel |
 
-### What Happens When It Stops?
+Because there's no persistent dev server, there's no in-memory app state to
+lose between sessions — the site is rebuilt fresh each time.
 
-- Preview shows "Sandbox stopped" or fails to load
-- Your code is preserved
-- Database connections close
-- Any in-memory state is lost
+## Preview vs Production
 
-### Restarting the Sandbox
-
-Restart by:
-
-1. **Sending any message** - Most common way
-2. **Clicking refresh** - In the preview panel
-3. **Opening your app** - From the apps list
-
-Restart takes a few seconds. All your code is restored.
-
-## Session vs Persistent State
-
-### Preserved (Always)
-
-- All your code files
-- Database data (in Supabase)
-- Environment variables
-- Version history
-
-### Lost on Restart
-
-- Browser session/cookies
-- In-memory application state
-- Local storage (in preview)
-- Temporary files
-
-## Working Around Auto-Stop
-
-### For Active Development
-
-Keep working - any interaction resets the timer.
-
-### For Testing Flows
-
-If testing requires uninterrupted time:
-
-1. Work in focused sessions
-2. Test critical flows quickly
-3. Or publish your app for persistent testing
-
-### For Demos
-
-For demos to others, publish your app:
-
-1. Click **Publish**
-2. Share the permanent URL (your-app.kleap.co)
-3. That URL never auto-stops
-
-## Performance Characteristics
-
-### Startup Time
-
-- First start: ~2-5 seconds
-- Restart: ~2-3 seconds
-- Hot reload: <1 second
-
-### Resource Limits
-
-The sandbox has standard limits:
-
-| Resource | Limit |
-|----------|-------|
-| Memory | 2 GB |
-| CPU | Shared |
-| Disk | 10 GB |
-| Timeout | 15 min idle |
-
-These are sufficient for development and testing.
+| Aspect | Preview (in editor) | Production (kleap.io) |
+|--------|---------------------|------------------------|
+| **URL** | In-editor only | Permanent, public |
+| **Uptime** | Built on demand | 24/7 on Cloudflare edge |
+| **Access** | You only | Public |
+| **Purpose** | Development | Live users |
+| **Build** | Ephemeral build | Deployed static build |
 
 ## Common Questions
 
 <AccordionGroup>
-  <Accordion title="Why did my preview stop?">
-    It auto-stopped after 15 minutes of no activity. Send a message to restart.
+  <Accordion title="Is there a dev sandbox I need to keep running?">
+    No. Astro sites don't use a long-running sandbox. Kleap builds your site on
+    demand for preview and automatically on publish.
   </Accordion>
 
   <Accordion title="Will I lose my code?">
-    No. Code is saved continuously. Only the running environment stops.
+    No. Your files are managed by Kleap and saved continuously, with full version
+    history.
   </Accordion>
 
-  <Accordion title="Can I increase the timeout?">
-    Not currently. For persistent hosting, publish your app.
+  <Accordion title="Why doesn't my preview match the live site yet?">
+    The preview shows your latest local changes. The live site updates when the
+    automatic publish build finishes.
   </Accordion>
 
-  <Accordion title="Is my database affected?">
-    Supabase database is separate and always available. Only the sandbox stops.
-  </Accordion>
-
-  <Accordion title="Why is restart slow sometimes?">
-    First restart after a long pause may take a few extra seconds as dependencies are restored.
+  <Accordion title="Where is my data stored?">
+    If you added Kleap Database, your data lives there independently of any build.
+    Form submissions land in your dashboard's Data panel.
   </Accordion>
 </AccordionGroup>
 
-## Preview vs Production
-
-| Aspect | Preview (Sandbox) | Production (Kleap) |
-|--------|-------------------|---------------------|
-| **URL** | Temporary | Permanent |
-| **Uptime** | While editing | 24/7 |
-| **Auto-stop** | 15 min idle | Never |
-| **Access** | You only | Public |
-| **Purpose** | Development | Live users |
-| **Speed** | Development mode | Optimized |
-
-## Best Practices
-
-<CardGroup cols={2}>
-  <Card title="Work in sessions" icon="clock">
-    Do focused work sessions rather than leaving it idle for hours.
-  </Card>
-  <Card title="Save state to database" icon="database">
-    For important state, save to Supabase rather than local storage.
-  </Card>
-  <Card title="Test critical flows quickly" icon="gauge">
-    Test full flows without long pauses in between.
-  </Card>
-  <Card title="Publish for demos" icon="rocket">
-    Publish your app for reliable demos and sharing.
-  </Card>
-</CardGroup>
-
 <Card title="Publishing Your App" icon="cloud-arrow-up" href="/features/publishing">
-  Get a permanent URL by publishing your app
+  How your site goes live at your-app.kleap.io
 </Card>

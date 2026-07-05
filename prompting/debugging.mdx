@@ -125,36 +125,36 @@ Can you fix the component to avoid server/client mismatch?
 ### "X is not a function"
 
 ```
-TypeError: supabase.from is not a function
+TypeError: bookings.map is not a function
 ```
 
 **Causes**:
-- Variable is not what you expect
-- Wrong import
-- Missing initialization
+- The data isn't an array yet (still loading)
+- Unexpected shape returned from the Kleap Database
+- Missing initial value
 
 **Fix prompt**:
 ```
-Getting "supabase.from is not a function" when trying
-to fetch data. Can you check the Supabase setup?
+Getting "bookings.map is not a function" when my bookings
+island loads data from the Kleap Database. Can you check how
+the data is fetched and rendered?
 ```
 
 ### "Failed to fetch"
 
 ```
-Error: Failed to fetch data from API
+Error: Failed to fetch
 ```
 
 **Causes**:
-- API endpoint doesn't exist
-- CORS issues
-- Network problems
-- Wrong URL
+- The form isn't wired to send submissions
+- Network problem
+- The Kleap Database read was blocked
 
 **Fix prompt**:
 ```
-The API call to /api/products is failing.
-Can you check the API route and make sure it's set up correctly?
+My contact form shows "Failed to fetch" when I submit it.
+Can you make sure the form sends submissions to my dashboard?
 ```
 
 ## Visual Debugging
@@ -215,30 +215,29 @@ Let's go back to the version before adding payments.
 I want to try implementing it differently.
 ```
 
-## Debugging Database Issues
+## Debugging Kleap Database Issues
 
-### Connection Errors
-
-```
-Supabase connection failing. Can you verify:
-1. Environment variables are set
-2. Database URL is correct
-3. The table exists
-```
-
-### Query Issues
+### Data Not Loading
 
 ```
-This query returns empty but there's data in the table:
-[your query]
-Can you check the query and RLS policies?
+My bookings aren't showing up from the Kleap Database. Can you check:
+1. The data is read from the right table
+2. The RLS policies allow reading this data
+3. I'm logged in, if the data requires an account
 ```
 
-### Auth Issues
+### Empty Results
 
 ```
-User authentication isn't working. After signup, the user
-doesn't stay logged in. Can you check the auth flow?
+This list is empty but there's data in the table.
+Can you check how the data is queried and the RLS policies?
+```
+
+### Account Issues
+
+```
+Accounts aren't working. After signup, the user
+doesn't stay logged in. Can you check the login flow?
 ```
 
 ## Prevention Tips
@@ -273,7 +272,7 @@ For advanced debugging:
 Share what you find:
 
 ```
-In the Network tab, the /api/users call returns 500.
+In the Network tab, the request that loads my bookings returns 500.
 The response body says: [error message]
 ```
 

@@ -3,7 +3,17 @@ title: "Self Hosting"
 description: "Deploy your app to your own infrastructure"
 ---
 
-While Kleap provides built-in hosting by default, you can self-host your app elsewhere.
+Kleap provides built-in hosting by default (your site goes live automatically at
+`https://your-app.kleap.io`). But you own your code — it's a standard **Astro**
+project, so you can build it and host it anywhere that serves static or edge sites.
+
+<Info>
+  Self-hosting means hosting the static Astro build. Features backed by Kleap
+  services — **Kleap Database**, **KleapForm** submissions, and built-in user
+  accounts — are provided by Kleap. If your site uses them, keeping the site on
+  Kleap Hosting is simplest; self-hosted copies would need those services to stay
+  reachable.
+</Info>
 
 ## Getting Your Code
 
@@ -28,133 +38,98 @@ cd your-app
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 18.20.8+ (or 20+/22+)
 - npm or pnpm
 
 ### Setup
 
 ```bash
 npm install
-cp .env.example .env.local
 npm run dev
 ```
-Visit `http://localhost:3000`
+Visit `http://localhost:4321` (Astro's default dev port).
 
 ### Build for Production
 
+Astro outputs a static site to the `dist/` folder:
+
 ```bash
-npm run build
-npm start
+npm run build      # builds to ./dist
+npm run preview    # preview the production build locally
 ```
 
 ## Hosting Options
 
+Any static or edge host works. Point it at the `dist/` output.
+
+### Cloudflare Pages
+
+1. Connect your GitHub repo
+2. Build command: `npm run build`
+3. Output directory: `dist`
+
 ### Netlify
 
-```bash
+```toml
 [build]
   command = "npm run build"
-  publish = ".next"
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
+  publish = "dist"
 ```
 
-### Railway
+### Vercel
 
-1. Connect GitHub repo
-2. Railway auto-detects Next.js
-3. Configure environment variables
+1. Import the GitHub repo
+2. Vercel auto-detects Astro
+3. Output directory: `dist`
 
-### DigitalOcean App Platform
+### Static Host / VPS
 
-1. Create new app
-2. Connect GitHub repository
-3. Select Next.js buildpack
-4. Configure environment variables
-
-### Docker
+`dist/` is plain static files — serve it with Nginx, Caddy, an S3 bucket +
+CDN, GitHub Pages, or any static host.
 
 ```dockerfile
-FROM node:18-alpine
-
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-
-ENV NODE_ENV production
-EXPOSE 3000
-
-CMD ["npm", "start"]
+# Simple static container
+FROM nginx:alpine
+COPY dist/ /usr/share/nginx/html
+EXPOSE 80
 ```
-
-### AWS (Amplify)
-
-1. Connect to Amplify Console
-2. Select your repository
-3. Amplify auto-detects Next.js
-4. Configure build settings
 
 ## Environment Variables
 
-Required variables for your app to work:
+Astro exposes variables prefixed with `PUBLIC_` to the browser via
+`import.meta.env`. If your site calls any external service, set its variables in
+your hosting platform:
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-STRIPE_SECRET_KEY=sk_...
-RESEND_API_KEY=re_...
+PUBLIC_SOME_SERVICE_URL=https://...
 ```
+
 <Warning>
-  Never commit `.env` files. Add them to `.gitignore` and configure in your hosting platform.
+  Never commit `.env` files. Add them to `.gitignore` and configure secrets in
+  your hosting platform.
 </Warning>
-
-## Supabase Considerations
-
-### Keep Using Supabase Cloud
-
-Your Supabase project continues working:
-
-- Database stays on Supabase Cloud
-- Auth continues working
-- Storage accessible from anywhere
-
-Just ensure your environment variables point to your Supabase project.
-
-### Self-Host Supabase (Advanced)
-
-For complete self-hosting:
-
-1. Deploy Supabase with Docker
-2. Configure your own PostgreSQL
-3. Update environment variables
-
-See [Supabase Self-Hosting Guide](https://supabase.com/docs/guides/self-hosting).
 
 ## Custom Domains
 
-### On Your Host
+### On Kleap Hosting
 
-Most platforms support custom domains:
+If you stay on Kleap, point your domain with an **A record** to Kleap's proxy:
 
-1. Add domain in hosting dashboard
-2. Configure DNS:
-   ```
-   A record → your-host-ip
-   or
-   CNAME → your-app.host.com
-   ```
+```
+A record  @    178.104.71.55
+```
+
+Use an **A record on the root/apex domain** (root domains can't use CNAME), keep
+Cloudflare DNS in **DNS-only** mode if you use Cloudflare, and Kleap issues SSL
+automatically. You can also buy a domain directly in-app.
+
+### On Your Own Host
+
+Most platforms support custom domains from their dashboard:
+
+1. Add the domain in your host's dashboard
+2. Configure DNS per that host's instructions (A record for root, CNAME for subdomains)
 3. SSL is usually automatic
-
-### Cloudflare (Recommended)
-
-For extra features:
-
-1. Add site to Cloudflare
-2. Update nameservers
-3. Configure DNS to point to your host
-4. Get free SSL, CDN, and protection
 
 ## CI/CD Setup
 
@@ -173,25 +148,17 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
       - run: npm ci
       - run: npm run build
-      # Add deployment step for your platform
+      # Add a step to publish ./dist to your platform
 ```
 
 ## Monitoring
 
-### Error Tracking
-
-Add error monitoring:
-
-- **Sentry** - Error tracking
-- **LogRocket** - Session replay
-- **Bugsnag** - Error reporting
-
 ### Analytics
 
-Add analytics:
+Add analytics by including their script in your base layout:
 
 - **Plausible** - Privacy-focused
 - **Google Analytics** - Comprehensive
@@ -205,58 +172,43 @@ Add analytics:
 
 ## Performance
 
-### Build Optimization
+A static Astro build is already fast — it ships HTML with minimal JavaScript
+(React only hydrates the interactive islands). To go further:
 
-```javascript
-// next.config.js
-module.exports = {
-  // Optimize images
-  images: {
-    formats: ['image/avif', 'image/webp'],
-  },
-  // Compress output
-  compress: true,
-};
-```
-
-### CDN
-
-Use a CDN for static assets:
-
-- Cloudflare (free)
-- CloudFront (AWS)
-- Fastly
+- Put a **CDN** in front of your static host (Cloudflare, CloudFront, Fastly)
+- Keep images optimized and lazy-loaded
+- Limit interactive islands to what actually needs them
 
 ## Comparison
 
 | Platform | Ease | Cost | Control |
 |----------|------|------|---------|
-| **Netlify** | ⭐⭐⭐ | $$ | Medium |
-| **Railway** | ⭐⭐ | $$ | High |
-| **DigitalOcean** | ⭐⭐ | $ | High |
-| **AWS** | ⭐ | $$$ | Full |
-| **Docker/VPS** | ⭐ | $ | Full |
+| **Kleap Hosting** | ⭐⭐⭐ | Included | Low |
+| **Cloudflare Pages** | ⭐⭐⭐ | Free tier | Medium |
+| **Netlify** | ⭐⭐⭐ | Free tier | Medium |
+| **Static host / VPS** | ⭐ | $ | Full |
 
 ## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="Build fails">
-    - Check Node.js version matches
-    - Verify all dependencies install
-    - Check environment variables are set
-    - Review build logs for specific errors
+    - Check the Node.js version (18.20.8+, or 20+/22+)
+    - Verify all dependencies install (`npm ci`)
+    - Check any required environment variables are set
+    - Review build logs for the specific error
   </Accordion>
 
-  <Accordion title="Database connection fails">
-    - Verify Supabase URL and key
-    - Check IP allowlist if using Supabase
-    - Ensure environment variables are available at runtime
+  <Accordion title="Pages 404 on my host">
+    - Make sure the publish/output directory is set to `dist`
+    - Serve `dist/` at the site root, not a subfolder
+    - Check your host supports clean URLs for static files
   </Accordion>
 
-  <Accordion title="Routes not working">
-    - Ensure platform supports Next.js routing
-    - Check rewrites configuration
-    - Verify _next folder is served correctly
+  <Accordion title="Kleap features stopped working">
+    - Forms, Kleap Database, and accounts are Kleap-backed services
+    - Self-hosted copies need those services to remain reachable, or you'll need
+      to replace them
+    - Keeping the site on Kleap Hosting avoids this entirely
   </Accordion>
 </AccordionGroup>
 

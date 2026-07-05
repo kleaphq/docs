@@ -3,22 +3,24 @@ title: "Live Preview"
 description: "See your app in real-time as you build"
 ---
 
-The live preview shows your app running in real-time. Every change you make appears instantly.
+The live preview shows your site as it's being built. Every change appears instantly, right inside the Kleap editor.
 
 ## How It Works
 
-Your app runs in a cloud sandbox (powered by Daytona) that:
+Kleap builds your site with a real, ephemeral build and renders it live inside the editor. What you see in the preview is exactly what your visitors get once you publish.
 
-- **Hot reloads** when code changes
-- **Persists state** during your session
-- **Runs real Next.js** - same as production
+- **Updates instantly** when the AI edits your code or you make a change
+- **Reflects the real build** — the same output as production, not a mockup
+- **Fully interactive** — click, type, and navigate like a live site
+
+Your site is built with **Astro 5** (static HTML), **Tailwind CSS v4**, and **React 19 islands** for interactivity — so the preview is fast and matches the published result.
 
 ## Preview Panel
 
 The preview panel on the right side of the editor shows:
 
-- Your running application
-- Real-time updates as you code
+- Your rendered site
+- Real-time updates as the AI (or you) edit code
 - Interactive elements (click, type, navigate)
 
 ### Controls
@@ -30,38 +32,26 @@ The preview panel on the right side of the editor shows:
 | **Device toggle** | Switch between desktop/tablet/mobile |
 | **URL bar** | Navigate to different pages |
 
-## Auto-Stop Behavior
+## Keeping the Preview Fresh
 
-<Warning>
-  The preview automatically stops after **15 minutes of inactivity** to save resources.
-</Warning>
+The preview rebuilds automatically whenever your site changes. If it ever looks out of date:
 
-### Restarting the Preview
+1. **Send a new message** — any chat interaction rebuilds and refreshes it
+2. **Click Refresh** — in the preview panel
+3. **Reopen the app** — from your apps list
 
-When stopped, restart by:
+## Preview vs. Published Site
 
-1. **Send a new message** - Any chat interaction restarts it
-2. **Click Refresh** - In the preview panel
-3. **Navigate to the app** - From the apps list
+The preview lives inside the editor and is only visible to you while you work. To get a permanent, public, shareable URL, [publish your app](/features/publishing).
 
-### Session State
-
-When the preview restarts:
-
-- Code changes are preserved
-- Database data persists (Supabase)
-- Local state/session resets
-
-## Preview URL
-
-Your preview runs at a temporary URL:
+Publishing happens **automatically** after each generation, and you can also publish on demand with the **Publish** button. Your published site lives at:
 
 ```
-https://3000-[sandbox-id].proxy.daytona.works
+https://your-app.kleap.io
 ```
 
 <Info>
-  This URL is temporary and requires authentication. For permanent, shareable URLs, [publish your app](/features/publishing).
+  Publishing and hosting are free — they don't use credits. Sites are served on Cloudflare's global edge with automatic HTTPS. For custom domains, see [custom domains](/features/custom-domains).
 </Info>
 
 ## Testing Your App
@@ -91,36 +81,24 @@ Open browser DevTools to see:
 - Network requests
 - JavaScript errors
 
-## Performance
-
-The preview runs on cloud infrastructure with:
-
-- Fast startup (under 2 seconds)
-- Hot module replacement
-- Automatic dependency installation
-
 ## Common Issues
 
 <AccordionGroup>
   <Accordion title="Preview not loading">
     1. Check if you have a stable internet connection
     2. Try refreshing the preview
-    3. Send a new message to restart the sandbox
+    3. Send a new message to rebuild the preview
     4. Clear browser cache and reload
   </Accordion>
 
-  <Accordion title="Preview stopped unexpectedly">
-    The preview auto-stops after 15 minutes. Send any message to restart it.
-  </Accordion>
-
   <Accordion title="Changes not showing">
-    1. Wait a few seconds for hot reload
+    1. Wait a few seconds for the rebuild to finish
     2. Try refreshing the preview
     3. Check for errors in the chat
   </Accordion>
 
   <Accordion title="Slow preview">
-    Large apps or complex operations may take longer. Consider:
+    Large sites or complex operations may take longer. Consider:
     - Breaking changes into smaller steps
     - Optimizing images and assets
     - Removing unused code
@@ -131,11 +109,10 @@ The preview runs on cloud infrastructure with:
 
 | Aspect | Preview | Production |
 |--------|---------|------------|
-| URL | Temporary | Permanent |
-| Access | Authenticated | Public |
-| Uptime | During editing | 24/7 |
-| Speed | Development mode | Optimized |
-| Features | Full | Full |
+| Where | Inside the editor | Public URL (`your-app.kleap.io`) |
+| Visibility | Only you, while editing | Public, 24/7 |
+| Purpose | Build and test | Live for visitors |
+| Output | Real build | Same build, on Cloudflare's global edge |
 
 <Card title="Ready to go live?" icon="rocket" href="/features/publishing">
   Publish your app to production

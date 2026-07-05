@@ -15,10 +15,10 @@ Both are AI-powered app builders with similar capabilities.
 | Live Preview | ✓ | ✓ |
 | Code Editor | ✓ | ✓ |
 | Element Selection | ✓ | ✓ |
-| **Framework** | Next.js 16 | Vite + React |
-| **Deployment** | Kleap Hosting | Lovable Cloud |
-| **Database** | Supabase | Supabase |
-| **UI Components** | shadcn/ui | shadcn/ui |
+| **Framework** | Astro 5 (static-first + React islands) | Vite + React |
+| **Deployment** | Kleap Hosting (kleap.io) | Lovable Cloud |
+| **Database** | Kleap Database (built-in) | Supabase |
+| **UI / Styling** | Tailwind CSS v4 + React islands | shadcn/ui |
 | Version History | ✓ | ✓ |
 | GitHub Integration | ✓ | ✓ |
 | Custom Domains | ✓ | ✓ |
@@ -26,10 +26,10 @@ Both are AI-powered app builders with similar capabilities.
 
 ### When to Choose Kleap
 
-- Prefer Next.js (server components, API routes)
-- Want integrated deployment with Kleap hosting
-- Building SEO-focused applications
-- Need static site generation
+- Prefer fast, static-first sites (Astro 5 ships minimal JavaScript)
+- Want automatic, integrated deployment with Kleap hosting
+- Building SEO-focused, content-driven sites
+- Need static site generation with React islands for interactivity
 
 ### When to Choose Lovable
 
@@ -46,10 +46,10 @@ Bolt is a general-purpose AI coding environment.
 | AI Chat | ✓ | ✓ |
 | Live Preview | ✓ | ✓ |
 | **Focus** | Web apps | Any code |
-| **Framework** | Next.js | Various |
-| **Database** | Supabase (built-in) | Manual setup |
+| **Framework** | Astro 5 | Various |
+| **Database** | Kleap Database (built-in) | Manual setup |
 | **Authentication** | Built-in | Manual setup |
-| **Deployment** | One-click | Manual |
+| **Deployment** | Automatic | Manual |
 | Starter Template | ✓ | Limited |
 | Custom Domains | ✓ | Via deployment platform |
 
@@ -195,7 +195,7 @@ Comparison with coding from scratch.
 ### From Bolt
 
 - Download your code
-- Adapt for Next.js structure
+- Adapt for Astro structure
 - Import into Kleap or rebuild
 
 ### To Traditional Development
@@ -203,7 +203,7 @@ Comparison with coding from scratch.
 - Push to GitHub
 - Clone locally
 - Continue development with any IDE
-- All standard Next.js patterns work
+- All standard Astro patterns work
 
 <Card title="Getting Started" icon="rocket" href="/introduction/getting-started">
   Try Kleap and see for yourself

@@ -1,51 +1,40 @@
 ---
 title: "Getting Started"
-description: "Build your first app with Kleap in 5 minutes"
+description: "Build your first site with Kleap in 5 minutes"
 ---
 
-Follow these steps to create and deploy your first app with Kleap.
+Follow these steps to create and publish your first site with Kleap.
 
 ## Step 1: Sign Up
 
 Go to [kleap.co](https://kleap.co) and create your account:
 
 1. Click **Get Started**
-2. Sign in with **Google** or use **Magic Link** (email)
+2. Sign in with **Google**, an email **magic link**, or a **6-digit email code**
 3. You'll receive free credits to start building
 
 <Info>
   No credit card required. Start building immediately with your free credits.
 </Info>
 
-## Step 2: Start Your App
+## Step 2: Describe Your Site
 
-You have two ways to begin:
+Tell Kleap what you want to build in the chat box:
 
-<Tabs>
-  <Tab title="From a Prompt">
-    Describe what you want to build in the chat box:
+```
+Create a landing page for a coffee shop with a hero section,
+menu with prices, opening hours, and a contact form
+```
 
-    ```
-    Create a task management app with:
-    - User authentication
-    - Ability to create, edit, and delete tasks
-    - Due dates and priority levels
-    - A clean, modern design
-    ```
+The AI generates your site from your description — no template picking, no setup. The more specific you are, the closer the first result.
 
-    The AI will generate your app based on your description.
-  </Tab>
-  <Tab title="From a Template">
-    1. Click **Templates** in the sidebar
-    2. Browse categories (SaaS, E-commerce, Portfolio, etc.)
-    3. Click **Use Template** on your choice
-    4. The template opens with all components ready
-  </Tab>
-</Tabs>
+<Tip>
+  Want ideas? Browse the [showcase](/use-cases/showcase) to see what others have built.
+</Tip>
 
 ## Step 3: Edit with AI
 
-Once your app is created, continue the conversation to refine it:
+Once your site is created, continue the conversation to refine it:
 
 ```
 Add a dark mode toggle to the header
@@ -59,7 +48,7 @@ Change the primary color to blue
 Add a contact form to the footer
 ```
 
-Each change updates your app in real-time in the preview panel.
+Each change updates your site in real-time in the preview panel.
 
 <Frame caption="The Kleap interface: AI chat on the left, live preview on the right">
   <img src="/images/kleap-interface.png" alt="Kleap interface showing AI chat and live preview" />
@@ -69,25 +58,27 @@ Each change updates your app in real-time in the preview panel.
   Be specific in your requests. Instead of "make it better", try "increase the font size of headings and add more padding between sections".
 </Tip>
 
-## Step 4: Preview Your App
+## Step 4: Preview Your Site
 
-Your app runs in a live preview on the right side of the screen:
+Your site shows in a live preview on the right side of the screen:
 
 - **Real-time updates** as you make changes
 - **Mobile responsive** - resize to test different screens
 - **Interactive** - click buttons, fill forms, test functionality
 
-<Warning>
-  The preview auto-stops after 15 minutes of inactivity. Simply refresh or send a new message to restart it.
-</Warning>
+<Tip>
+  The preview is a real build of your site rendered inside the editor. It refreshes automatically after each generation — there's no sandbox to restart and no separate preview URL.
+</Tip>
 
-## Step 5: Publish Your App
+## Step 5: Publish Your Site
 
-When you're ready to go live:
+Publishing is **automatic** — every time a generation finishes, Kleap deploys your site for you. To publish on demand:
 
 1. Click the **Publish** button in the top bar
-2. Wait for the build to complete (~30 seconds)
-3. Your app is live at `your-app.kleap.co`
+2. Wait for the build to complete
+3. Your site is live at `your-app.kleap.io`
+
+Hosting is free, on Cloudflare's global edge with automatic SSL.
 
 ## Step 6: Connect a Custom Domain (Optional)
 
@@ -100,7 +91,7 @@ Want your own domain like `myapp.com`?
 5. SSL is automatically configured
 
 <Card title="Need a domain?" icon="globe">
-  Purchase a domain from registrars like Namecheap, Google Domains, or Cloudflare, then connect it to your app.
+  Buy a domain right inside Kleap, or bring one from any registrar. Root domains connect with an **A record** (never a CNAME); if your DNS is on Cloudflare, set the record to **DNS only**.
 </Card>
 
 ## What's Next?
@@ -109,11 +100,11 @@ Want your own domain like `myapp.com`?
   <Card title="Learn the AI Chat" icon="message" href="/features/ai-chat">
     Master prompting for better results
   </Card>
-  <Card title="Explore Templates" icon="grid" href="/features/templates-gallery">
-    Browse our professional templates
+  <Card title="What You Can Build" icon="grid" href="/features/templates-gallery">
+    See the kinds of sites Kleap creates
   </Card>
-  <Card title="Connect Supabase" icon="database" href="/integrations/supabase">
-    Add a database to your app
+  <Card title="Add a database" icon="database" href="/integrations/supabase">
+    Turn on Kleap Database — Postgres and user accounts, built in
   </Card>
   <Card title="Push to GitHub" icon="github" href="/integrations/github">
     Version control your code

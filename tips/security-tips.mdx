@@ -3,274 +3,127 @@ title: "Security Tips"
 description: "Keep your app and user data safe"
 ---
 
-Best practices for building secure applications with Kleap.
+Best practices for building secure applications with Kleap. Because Kleap publishes **static Astro sites**, much of the hard part is handled for you — but a few habits keep your app and users safe.
 
 ## The Golden Rules
 
 <CardGroup cols={2}>
-  <Card title="Never trust client input" icon="shield-halved">
-    Always validate data on the server
-  </Card>
-  <Card title="Keep secrets secret" icon="key">
-    Use environment variables for API keys
+  <Card title="Keep secrets out of the site" icon="key">
+    Only publishable keys belong in a static site — never secret keys.
   </Card>
   <Card title="Least privilege" icon="lock">
-    Only give access to what's needed
+    Only show and store the data you actually need.
   </Card>
-  <Card title="Defense in depth" icon="layer-group">
-    Multiple layers of protection
+  <Card title="Protect the right pages" icon="shield-halved">
+    Put account and dashboard pages behind a login.
+  </Card>
+  <Card title="Let Kleap validate" icon="layer-group">
+    Forms and saved data are validated server-side for you.
   </Card>
 </CardGroup>
 
-## Protecting Secrets
+## Keeping secrets safe
 
-### Environment Variables
+Your published site is static, so **anything inside it is public**. That changes the rules for secrets compared to a traditional server app.
 
-Never hardcode secrets in your code:
+```txt
+// ✅ Safe in a site — publishable keys are meant to be public
+Stripe publishable key   pk_live_...
 
-```typescript
-// ❌ Bad - exposed in client bundle
-const apiKey = "sk_live_abc123";
-
-// ✅ Good - server-side only
-const apiKey = process.env.STRIPE_SECRET_KEY;
+// ❌ Never in a site — anyone can read it
+Stripe secret key        sk_live_...
+password / private token / database credential
 ```
 
-### Setting Environment Variables
+### What must stay out of your site
 
-1. Go to **Settings** > **Environment**
-2. Add your secrets
-3. Set appropriate scope (dev/prod)
-
-### What Goes in Environment Variables
-
-- API keys (Stripe, SendGrid, etc.)
+- Secret API keys (`sk_...`)
+- Passwords and private tokens
 - Database credentials
-- OAuth secrets
-- Encryption keys
-- Third-party service tokens
+- Any other value you wouldn't post publicly
 
-## Database Security
+<Warning>
+  Don't paste secret keys, passwords, or private tokens into your prompts either. If a feature needs a secret to work, it belongs on a server — use Kleap's built-in Database and Forms, which handle that for you.
+</Warning>
 
-### Always Enable RLS
+## Protecting user data
 
-Row Level Security is your primary defense:
+If your app has logins or saves data, turn on the **Kleap Database** — managed Postgres with built-in user accounts. You don't connect or manage an outside database.
 
-```sql
--- Enable RLS on table
-ALTER TABLE posts ENABLE ROW LEVEL SECURITY;
+### Row-Level Security keeps users separated
 
--- Users can only see their own posts
-CREATE POLICY "Users read own posts"
-ON posts FOR SELECT
-USING (auth.uid() = user_id);
-
--- Users can only modify their own posts
-CREATE POLICY "Users modify own posts"
-ON posts FOR ALL
-USING (auth.uid() = user_id);
-```
-
-### Common RLS Patterns
-
-```sql
--- Public read, owner write
-CREATE POLICY "Public read"
-ON posts FOR SELECT USING (true);
-
-CREATE POLICY "Owner write"
-ON posts FOR INSERT
-WITH CHECK (auth.uid() = user_id);
-
--- Team-based access
-CREATE POLICY "Team members"
-ON documents FOR ALL
-USING (team_id IN (
-  SELECT team_id FROM team_members
-  WHERE user_id = auth.uid()
-));
-```
-
-### Check Your Policies
-
-Ask AI to review:
+**Row-Level Security (RLS)** is your primary defense: each signed-in user can only see and change **their own rows**, even though everyone shares one database. When you add data features, ask the AI to confirm the data is scoped to the current user.
 
 ```
-Can you check the RLS policies on my tables and make sure
-users can only access their own data?
+Can you check that my tables are protected so users can only
+access their own data?
 ```
 
-## Input Validation
+### Built-in accounts
 
-### Validate on Server
+Kleap Database ships with **email + password accounts** and the sign-up / log-in UI. Passwords are hashed and sessions are handled securely — you don't build any of it. To restrict who can see a page, put it behind a login:
 
-Never trust client-side validation alone:
-
-```typescript
-// API route validation
-export async function POST(request: Request) {
-  const { email, message } = await request.json();
-
-  // Validate
-  if (!email || !email.includes('@')) {
-    return Response.json({ error: 'Invalid email' }, { status: 400 });
-  }
-
-  if (!message || message.length > 1000) {
-    return Response.json({ error: 'Invalid message' }, { status: 400 });
-  }
-
-  // Process...
-}
+```
+Add a login and only let signed-in users see the account page.
 ```
 
-### Use Zod for Validation
+## Input validation
 
-```typescript
-import { z } from 'zod';
+You don't write server code on Kleap, so validation of saved data and form submissions is handled by Kleap on the server. On the page itself, still keep inputs sensible for a good experience:
 
-const contactSchema = z.object({
-  email: z.string().email(),
-  message: z.string().min(1).max(1000),
-});
+- Mark required fields as required
+- Keep messages and text fields to reasonable lengths
+- Give clear error messages that **don't leak sensitive details**
 
-export async function POST(request: Request) {
-  const body = await request.json();
-  const result = contactSchema.safeParse(body);
+## Forms
 
-  if (!result.success) {
-    return Response.json({ error: result.error }, { status: 400 });
-  }
+Any contact or lead form you add is processed server-side by Kleap. Every submission is **validated, sanitized, and rate-limited** automatically, then delivered to your dashboard. There are no keys to manage and spam protection is built in — nothing to set up.
 
-  // Process validated data
-  const { email, message } = result.data;
-}
-```
-
-## Authentication Security
-
-### Protect Routes
-
-Verify authentication on protected routes:
-
-```typescript
-import { createClient } from '@/lib/supabase/server';
-
-export async function GET() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  // Proceed with authenticated request
-}
-```
-
-### Session Management
-
-- Use Supabase's built-in session handling
-- Don't store sessions in localStorage for sensitive apps
-- Implement proper logout that clears all sessions
-
-## Preventing Common Attacks
+## Preventing common attacks
 
 ### XSS (Cross-Site Scripting)
 
-React automatically escapes content, but be careful with:
+Content you display is escaped automatically, so ordinary text is safe. The risk comes from injecting **raw, unescaped HTML** from an untrusted source — avoid that pattern, and Kleap's pre-build checks will flag it if it slips in.
 
-```typescript
-// ❌ Dangerous - allows XSS
-<div dangerouslySetInnerHTML={{ __html: userInput }} />
-
-// ✅ Safe - auto-escaped
-<div>{userInput}</div>
+```txt
+✅ Safe   — display text normally; it's auto-escaped
+❌ Risky  — injecting raw HTML from user input onto the page
 ```
 
-### SQL Injection
+### Data leaks between users
 
-Supabase uses parameterized queries by default:
+The way one user ends up seeing another user's data is missing per-user scoping. **Row-Level Security** prevents this — confirm each data feature limits users to their own rows.
 
-```typescript
-// ✅ Safe - parameterized
-const { data } = await supabase
-  .from('posts')
-  .select()
-  .eq('user_id', userId);
+### Transport security
 
-// ❌ Dangerous - never do this
-const { data } = await supabase.rpc('raw_query', {
-  query: `SELECT * FROM posts WHERE user_id = '${userId}'`
-});
-```
+All Kleap sites are served over **HTTPS/TLS automatically**, including custom domains, so traffic between your visitors and your site is encrypted with no setup.
 
-### CSRF (Cross-Site Request Forgery)
+## File uploads
 
-Next.js and Supabase handle most CSRF protection. Ensure:
-
-- Use SameSite cookies
-- Verify origin on sensitive actions
-- Use Supabase's built-in auth tokens
-
-## File Upload Security
-
-### Validate File Types
-
-```typescript
-const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-
-if (!allowedTypes.includes(file.type)) {
-  throw new Error('Invalid file type');
-}
-```
-
-### Limit File Size
-
-```typescript
-const maxSize = 5 * 1024 * 1024; // 5MB
-
-if (file.size > maxSize) {
-  throw new Error('File too large');
-}
-```
-
-### Use Supabase Storage Policies
-
-```sql
--- Only allow users to upload to their own folder
-CREATE POLICY "User uploads"
-ON storage.objects FOR INSERT
-WITH CHECK (
-  bucket_id = 'avatars' AND
-  (storage.foldername(name))[1] = auth.uid()::text
-);
-```
+If your app accepts uploads through a Kleap form, submissions are handled server-side with validation and rate limiting built in. Keep the on-page experience tidy by asking for only the file types and sizes you actually need.
 
 ## Security Checklist
 
 Before launching:
 
-- [ ] All secrets in environment variables
-- [ ] RLS enabled on all tables
-- [ ] Input validation on all forms
-- [ ] Authentication required on protected routes
-- [ ] File upload restrictions in place
-- [ ] No sensitive data in client-side code
-- [ ] HTTPS enabled (automatic with Kleap)
+- [ ] No secret keys, passwords, or private tokens anywhere in the site (only publishable keys)
+- [ ] No secrets pasted into prompts
+- [ ] If you store data, users are scoped to their own rows (Row-Level Security)
+- [ ] Private pages (dashboards, account areas) are behind a login
 - [ ] Error messages don't leak sensitive info
+- [ ] HTTPS enabled (automatic with Kleap)
 
 ## Security Review
 
-Ask AI to review your security:
+Ask AI to review your app:
 
 ```
 Can you do a security review of my app?
 Check for:
-- Exposed secrets
-- Missing RLS policies
-- Unprotected routes
-- Input validation gaps
+- Any secrets accidentally left in the site
+- Data that isn't scoped to the signed-in user
+- Pages that should be behind a login
+- Inputs that need clearer validation
 ```
 
 <Warning>

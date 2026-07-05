@@ -116,21 +116,24 @@ These are already available:
 
 ### Core
 
-- `next` - Framework
-- `react` - UI library
+- `astro` - Framework (static site generator)
+- `react` - UI library (React 19, for interactive islands)
 - `typescript` - Type safety
-- `tailwindcss` - Styling
+- `tailwindcss` - Styling (Tailwind v4)
 
-### shadcn/ui Dependencies
+### UI & Icons
 
-- `@radix-ui/*` - Headless components
+Your interactive React islands can pull from the React 19 ecosystem:
+
 - `lucide-react` - Icons
+- `motion` - Animations
+- `radix-ui` - Headless, accessible component primitives
 - `clsx` - Class utilities
 - `tailwind-merge` - Tailwind class merging
 
 ### Database
 
-- `@supabase/supabase-js` - Database client
+- `@/lib/kleap-db` - **Kleap Database** client (managed Postgres). Use this for reading and writing data — you don't need to install or configure a separate database client like `@supabase/supabase-js`.
 
 ## Package Versions
 
@@ -168,14 +171,19 @@ This adds `@types/lodash`.
 
 ### Add Authentication
 
-```
-"Add OAuth login with the next-auth package"
-```
-
-### Add Email
+Kleap Database includes built-in email/password accounts, so ask for that
+directly instead of installing a separate auth library:
 
 ```
-"Install @sendgrid/mail for sending emails"
+"Add email and password login using Kleap Database accounts"
+```
+
+### Add Email Notifications
+
+For an email whenever someone submits a form, use built-in **Forms** — no package needed. Sending custom transactional email from a static site requires an external provider called from your own backend (advanced):
+
+```
+"Add a contact form that emails me on each submission"
 ```
 
 ### Add Markdown
@@ -218,29 +226,31 @@ import _ from 'lodash';
 import debounce from 'lodash/debounce';
 ```
 
-## Server vs Client Packages
+## Build-Time vs Browser Packages
 
-### Server-Only
+### Build-Time Only
 
-Some packages should only run on server:
+Some packages should only run at build time, in Astro frontmatter (the code
+between the `---` fences in a `.astro` file). This code never ships to the browser:
 
-```typescript
-// This runs only on server
-import { someServerThing } from 'server-package';
-
-export async function GET() {
-  // Use server package here
-}
+```astro
+---
+// Runs at build time only
+import { someBuildThing } from 'build-package';
+const data = await someBuildThing();
+---
 ```
 
-### Client-Only
+### Browser (Interactive Islands)
 
-Some packages need browser APIs:
+Packages that need browser APIs run inside a React island, hydrated with a
+`client:*` directive:
 
-```typescript
-'use client';
-
-import { ClientComponent } from 'client-package';
+```astro
+---
+import Widget from '../components/Widget.jsx';
+---
+<Widget client:load />
 ```
 
 ## Troubleshooting

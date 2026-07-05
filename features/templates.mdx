@@ -1,67 +1,61 @@
 ---
 title: "App Foundation"
-description: "The technology stack powering your Kleap apps"
+description: "The technology behind your Kleap sites"
 ---
 
-Every Kleap app is built on a modern, production-ready foundation.
+Every Kleap site is built on a modern, performance-first foundation designed for speed and SEO.
 
 ## Technology Stack
 
-When you create an app, you get:
+When Kleap builds your site, you get:
 
 | Technology | Purpose |
 |------------|---------|
-| **Next.js 16** | React framework with App Router |
-| **TypeScript** | Type-safe code |
-| **Tailwind CSS** | Utility-first styling |
-| **shadcn/ui** | Professional component library |
-| **Supabase** | Database, auth, and storage |
+| **Astro 5** | Fast, mostly-static site framework (great for SEO) |
+| **Tailwind CSS v4** | Utility-first, responsive styling |
+| **React 19 islands** | Interactivity only where it's needed |
+| **TypeScript** | Type-safe components |
+| **Cloudflare edge** | Global hosting for your published site |
 
-## What's Pre-Configured
+<Info>
+  Kleap ships mostly static HTML by default, so your pages are fast and rank well. Interactive parts (menus, sliders, forms, dashboards) are added as React "islands" without slowing down the rest of the page.
+</Info>
 
-### Project Structure
+## Project Structure
+
+A generated Astro site is organized like this:
 
 ```
-your-app/
-├── app/                  # Pages and routes
-├── components/           # React components
-├── lib/                  # Utilities
-├── public/               # Static assets
-└── styles/               # CSS files
+your-site/
+├── src/
+│   ├── pages/          # Each .astro file is a page/route
+│   ├── components/     # Reusable .astro and .tsx components
+│   ├── layouts/        # Shared page shells (Base.astro)
+│   └── styles/         # global.css (Tailwind)
+├── public/             # Static assets (images, fonts)
+└── astro.config.mjs    # Framework config (managed by Kleap)
 ```
 
-### Dependencies Included
-
-- React 19
-- Next.js 16
-- Tailwind CSS
-- shadcn/ui components
-- Supabase client
-- Lucide icons
-
-### Configuration
-
-- TypeScript configured
-- ESLint rules set
-- Tailwind theme ready
-- Path aliases (@/)
+<Info>
+  You focus on describing pages and content — Kleap manages the configuration files (`astro.config.mjs`, build settings) for you.
+</Info>
 
 ## Building with AI
 
-Instead of modifying template code manually, you describe what you want:
+Instead of editing template code by hand, you describe what you want:
 
-### Create Components
+### Create Sections
 
 ```
 Add a pricing section with three tiers:
 Free, Pro, and Enterprise
 ```
 
-### Add Features
+### Add Pages
 
 ```
-Add user authentication with
-Google login and email signup
+Add an About page and a Contact page,
+and link them in the navigation
 ```
 
 ### Style Changes
@@ -71,31 +65,28 @@ Change the color scheme to blue
 with a modern, clean design
 ```
 
+## Adding Dynamic Features
+
+Your site is static by default, but you can add dynamic capability when you need it:
+
+- **Forms** — contact, lead, and newsletter forms work out of the box ([Forms & Data](/features/forms-data))
+- **Database & accounts** — add **Kleap Database** for bookings, saved data, or user logins ([Kleap Database](/integrations/supabase))
+- **Payments** — embed Stripe payment links or buttons ([Payments](/integrations/stripe))
+
 ## Best Practices
 
 <AccordionGroup>
   <Accordion title="Start simple">
-    Begin with a basic description, then add features incrementally.
+    Begin with a basic description, then add sections and pages incrementally.
   </Accordion>
-
   <Accordion title="Be specific">
-    The more detail you provide, the better the AI understands your vision.
+    The more detail you provide, the better Kleap understands your vision.
   </Accordion>
-
   <Accordion title="Iterate">
-    Build in small steps. Test each change before moving on.
+    Build in small steps. Check each change in the preview before moving on.
   </Accordion>
 </AccordionGroup>
 
-## Customization
-
-Everything is customizable via AI:
-
-- **Layout** - Page structure, navigation, sections
-- **Styling** - Colors, fonts, spacing, animations
-- **Components** - Forms, tables, cards, modals
-- **Features** - Auth, database, payments, APIs
-
 <Card title="Start Building" icon="play" href="/introduction/getting-started">
-  Create your first app
+  Create your first site
 </Card>

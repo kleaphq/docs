@@ -1,96 +1,53 @@
 ---
 title: "Integrations Overview"
-description: "Connect powerful services to your Kleap apps"
+description: "Connect services and add capabilities to your Kleap sites"
 ---
 
-Kleap integrates with best-in-class services to power your applications.
+Kleap sites are fast, mostly-static websites. Most of what you need is **built in** — hosting, forms, analytics, images, and an optional database. A few external services connect on top.
 
-## Core Integrations
+## Built-in Capabilities
 
 <CardGroup cols={2}>
-  <Card title="GitHub" icon="github" href="/integrations/github">
-    Version control, code backup, and collaborative development.
+  <Card title="Forms & Data" icon="table" href="/features/forms-data">
+    Contact, lead, and newsletter forms with submissions in your dashboard — no setup.
   </Card>
-  <Card title="Supabase" icon="database" href="/integrations/supabase">
-    PostgreSQL database, authentication, storage, and real-time subscriptions.
+  <Card title="Kleap Database" icon="database" href="/integrations/supabase">
+    Add a built-in Postgres database and user accounts when your app needs them.
   </Card>
-  <Card title="Stripe" icon="credit-card" href="/integrations/stripe">
-    Accept payments, manage subscriptions, and handle billing.
+  <Card title="Analytics" icon="chart-line" href="/features/analytics">
+    Track visitors and pageviews out of the box.
+  </Card>
+  <Card title="Custom Domains" icon="globe" href="/features/custom-domains">
+    Connect or buy a domain, with free automatic SSL.
   </Card>
 </CardGroup>
 
-## How Integrations Work
+## External Integrations
 
-### One-Time Setup
+<CardGroup cols={2}>
+  <Card title="GitHub" icon="github" href="/integrations/github">
+    Two-way sync to back up and own your code. (Backup, not deployment.)
+  </Card>
+  <Card title="Payments (Stripe)" icon="credit-card" href="/integrations/stripe">
+    Add Stripe payment links and buttons to sell on your site.
+  </Card>
+  <Card title="AI Models" icon="brain" href="/integrations/ai-models">
+    The AI that builds and edits your site.
+  </Card>
+</CardGroup>
 
-Most integrations require a one-time OAuth connection:
+## How It Works
 
-1. Click **Connect** for the service
-2. Authorize Kleap in the service's popup
-3. Connection is saved to your account
-4. Use across all your apps
+- **Hosting & publishing** — automatic. Your site goes live at `your-app.kleap.io` with no setup.
+- **Forms** — work automatically on preview and published sites. Submissions appear in your dashboard.
+- **Kleap Database** — added on demand: ask the AI to add saved data or user accounts, and Kleap provisions it for that app.
+- **GitHub** — a one-time connection to sync your code to a repo.
+- **Payments** — embed Stripe payment links/buttons (no server keys needed on a static site).
 
-### Per-App Configuration
-
-Some integrations need app-specific setup:
-
-- **Supabase** - Each app can have its own database
-- **Custom domains** - Configured per published app
-- **Environment variables** - Set per app
-
-## Integration Status
-
-Check your connected integrations:
-
-1. Go to **Settings** > **Integrations**
-2. View connection status for each service
-3. Reconnect or disconnect as needed
-
-## Available Integrations
-
-| Service | Purpose | Setup |
-|---------|---------|-------|
-| **GitHub** | Code repository | One-time OAuth |
-| **Supabase** | Database & auth | One-time OAuth + per-app |
-| **Stripe** | Payments | Via templates |
-
-## AI Model Integration
-
-Kleap uses AI to build your apps. Learn about the models powering the experience:
-
-<Card title="AI Models" icon="brain" href="/integrations/ai-models">
-  Understand the AI models behind Kleap
-</Card>
+<Info>
+  **What about connecting my own Supabase project?** Kleap now provides its own built-in database — **Kleap Database** — so you no longer need to connect an external Supabase account. See [Kleap Database](/integrations/supabase).
+</Info>
 
 ## Coming Soon
 
-We're always adding new integrations:
-
-- **Resend** - Transactional emails
-- **Postmark** - Email delivery
-- **Cloudinary** - Image optimization
-- **Analytics** - Advanced tracking
-
-<Info>
-  Have a service you'd like integrated? [Let us know](mailto:hello@kleap.co)!
-</Info>
-
-## Integration Best Practices
-
-<AccordionGroup>
-  <Accordion title="Keep credentials secure">
-    Use environment variables for API keys. Never commit secrets to code.
-  </Accordion>
-
-  <Accordion title="Use official integrations">
-    Our built-in integrations handle authentication securely. Avoid manual API key entry when possible.
-  </Accordion>
-
-  <Accordion title="Test in development first">
-    Verify integrations work in preview before publishing to production.
-  </Accordion>
-
-  <Accordion title="Monitor usage">
-    Keep an eye on third-party service usage to avoid unexpected charges.
-  </Accordion>
-</AccordionGroup>
+We're always adding new capabilities. Have a service you'd like integrated? [Let us know](mailto:hello@kleap.co).

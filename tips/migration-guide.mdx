@@ -5,6 +5,24 @@ description: "Moving from Lovable, Bolt, or v0 to Kleap"
 
 Coming from another AI app builder? Here's how to get started with Kleap.
 
+<Info>
+  Kleap builds **Astro** websites (Astro 5, Tailwind CSS, React islands for
+  interactivity, TypeScript). You don't hand-migrate code — you describe or
+  paste your existing site and Kleap rebuilds it as a fast, static Astro site.
+</Info>
+
+## How Migration Works
+
+There's no import tool that lifts another framework's code over verbatim. Instead:
+
+1. **Describe your existing site** to the AI — its pages, sections, and style
+2. **Or paste content/screenshots** so the AI can recreate the look and copy
+3. **Kleap rebuilds it as an Astro site** you can then refine with chat
+4. **Publish** — it deploys automatically to `https://your-app.kleap.io`
+
+You don't connect an external database or "adapt" old code. If you need data,
+accounts, or form submissions, Kleap has those built in (see below).
+
 ## From Lovable
 
 Lovable and Kleap are similar in concept. Here's what to know:
@@ -13,27 +31,27 @@ Lovable and Kleap are similar in concept. Here's what to know:
 
 - AI-powered chat interface
 - Real-time preview
-- Supabase integration
-- One-click deployment
-- React/Next.js stack
+- Built-in data/accounts (no external database to wire up)
+- One-click (automatic) publishing
+- Tailwind CSS styling
 
 ### Key Differences
 
 | Feature | Lovable | Kleap |
 |---------|---------|-------|
-| **Framework** | Vite + React | Next.js 16 |
-| **Styling** | Tailwind | Tailwind + shadcn/ui |
-| **Hosting** | Lovable Cloud | Kleap Hosting |
-| **Sandboxes** | Custom | Daytona |
+| **Framework** | Vite + React | Astro 5 (static, React islands) |
+| **Styling** | Tailwind | Tailwind CSS |
+| **Hosting** | Lovable Cloud | Kleap Hosting (Cloudflare edge) |
+| **Database** | Supabase | Kleap Database (built-in, opt-in) |
 | **Pricing** | Message-based | Credit-based |
 
 ### Migration Steps
 
-1. **Export from Lovable** (if possible) or note down your app's features
-2. **Create new Kleap app** from appropriate template
-3. **Recreate features** describing them to AI
-4. **Connect Supabase** - Same project or new one
-5. **Migrate data** if using same Supabase project
+1. **Note your app's pages and features** (export from Lovable if you can)
+2. **Create a new Kleap app**
+3. **Describe or paste each page** so the AI recreates it in Astro
+4. **Add data or accounts** with Kleap Database only if you need them
+5. **Publish** — Kleap deploys automatically to `your-app.kleap.io`
 
 ### Lovable → Kleap Concepts
 
@@ -41,9 +59,9 @@ Lovable and Kleap are similar in concept. Here's what to know:
 |---------|------------------|
 | Chat | AI Chat |
 | Preview | Live Preview |
-| Deploy | Publish |
-| Supabase | Supabase |
-| Edge Functions | API Routes + Edge Functions |
+| Deploy | Publish (automatic) |
+| Supabase | Kleap Database |
+| Forms | KleapForm (built-in forms) |
 
 ## From Bolt.new
 
@@ -53,50 +71,53 @@ Bolt and Kleap both use AI for development.
 
 | Feature | Bolt | Kleap |
 |---------|------|-------|
-| **Environment** | StackBlitz | Daytona |
-| **Framework** | Various | Next.js |
-| **Database** | Manual setup | Supabase built-in |
-| **Deployment** | Netlify/Manual | Kleap Hosting |
+| **Output** | Various frameworks | Astro static site |
+| **Preview** | StackBlitz | In-editor live build |
+| **Database** | Manual setup | Kleap Database (built-in) |
+| **Deployment** | Netlify/Manual | Kleap Hosting (automatic) |
 
 ### Migration Steps
 
-1. **Note your app structure** - Pages, components, features
-2. **Create Kleap app** - Start fresh or from template
-3. **Describe features** - Tell AI what to build
-4. **Set up database** - Connect Supabase
-5. **Deploy** - Publish your app
+1. **Note your site structure** — pages, sections, features
+2. **Create a Kleap app** — start fresh or from a template
+3. **Describe what to build** — tell the AI each page and section
+4. **Add data or forms** if you need them (Kleap Database / KleapForm)
+5. **Publish** — your site deploys automatically
 
-### Code Migration
+### Reusing Content
 
-If you have code from Bolt:
+If you have content or a component you like from Bolt, describe it or paste it:
 
 ```
-I have a React component from another project.
-Can you adapt it to work with our Next.js setup?
-[paste component code]
+Here's the hero section from my old site. Recreate something
+similar for this page:
+[paste the content, copy, or a screenshot]
 ```
+
+Kleap will rebuild it as Astro — you don't need it to run the original code.
 
 ## From v0 (Vercel)
 
-v0 generates UI components. Kleap builds full apps.
+v0 generates UI components. Kleap builds full websites.
 
 ### Differences
 
 | Feature | v0 | Kleap |
 |---------|-----|-------|
-| **Output** | Components | Full apps |
-| **Database** | No | Supabase |
-| **Auth** | No | Built-in |
-| **Hosting** | Manual | Kleap Hosting |
-| **Interactivity** | Limited | Full |
+| **Output** | Components | Full sites |
+| **Data** | No | Kleap Database (built-in) |
+| **Accounts** | No | Built-in (opt-in) |
+| **Hosting** | Manual | Kleap Hosting (automatic) |
+| **Interactivity** | Limited | React islands |
 
-### Using v0 Components in Kleap
+### Using v0 Designs in Kleap
 
-If you have a v0 component you like:
+If you have a v0 component design you like, describe it or paste the markup so
+the AI can recreate it as an Astro component or React island:
 
 ```
 I have this component design from v0.
-Can you integrate it into our app?
+Can you recreate it as a section on my homepage?
 [paste component code or describe it]
 ```
 
@@ -107,85 +128,90 @@ Create a pricing table with three tiers, similar to v0's
 pricing component style with cards and feature lists
 ```
 
-## From Custom Code
+## From an Existing Website
 
-Have an existing React/Next.js project?
+Already have a live site (WordPress, Webflow, Squarespace, a custom build)?
 
-### Manual Migration
+### How to Migrate
 
-1. **Create new Kleap app**
-2. **Describe your app** to AI
-3. **Copy specific components** you want to keep
-4. **Ask AI to adapt** them to Kleap's structure
+1. **Create a new Kleap app**
+2. **Paste your current site's URL, content, or screenshots**
+3. **Ask the AI to recreate it** page by page as an Astro site
+4. **Refine** colors, copy, and layout with follow-up messages
 
 ### Example
 
 ```
-I have an existing header component. Can you recreate
-something similar that matches our app's design?
+Recreate my current homepage. It has:
+- Logo on the left, nav links in the center, a "Book a call" button on the right
+- A hero with a headline, subtext, and two buttons
+- A three-column features section
+- A testimonials row and a footer
 
-Features it had:
-- Logo on left
-- Nav links in center
-- User avatar dropdown on right
-- Mobile hamburger menu
+[paste your current copy or a screenshot]
 ```
 
-## Data Migration
+## Data, Accounts & Forms
 
-### Same Supabase Project
+You do **not** connect an external database. Kleap provides these when you need them:
 
-If keeping your Supabase project:
+- **Kleap Database** — a built-in Postgres database with Row Level Security and
+  built-in email/password user accounts. It's opt-in and added on demand, so
+  simple sites stay purely static.
+- **KleapForm** — built-in forms. Submissions land in your dashboard's Data
+  panel and can trigger email notifications, no backend to set up.
+- **Payments** — connect Stripe Payment Links or Buy Buttons (publishable key
+  only) for checkout.
 
-1. Connect the same Supabase project in Kleap
-2. Your data is instantly available
-3. Update queries if schema changed
+Ask for them in chat, for example:
 
-### New Supabase Project
+```
+Add a contact form that emails me each submission
+```
 
-If creating new database:
-
-1. **Export data** from old project (CSV/JSON)
-2. **Create tables** in new Supabase
-3. **Import data** via Supabase dashboard
-4. **Update RLS policies**
+```
+Add a members area with email/password login backed by Kleap Database
+```
 
 ## Feature Parity Checklist
 
-When migrating, ensure you recreate:
+When migrating, decide which of these your new site needs:
 
-- [ ] All pages and routes
-- [ ] Authentication flow
-- [ ] Database schema
-- [ ] API integrations
-- [ ] UI components
-- [ ] Forms and validation
-- [ ] File uploads (if any)
-- [ ] Payment integration (if any)
+- [ ] All pages and sections
+- [ ] Navigation and footer
+- [ ] Contact / lead forms (KleapForm)
+- [ ] User accounts (Kleap Database) — only if needed
+- [ ] Stored data (Kleap Database) — only if needed
+- [ ] Payment / checkout (Stripe links)
+- [ ] Custom domain
 
 ## Tips for Smooth Migration
 
 <AccordionGroup>
-  <Accordion title="Start fresh when possible">
-    It's often faster to rebuild than migrate complex code. AI can recreate features quickly.
+  <Accordion title="Rebuild, don't port">
+    Kleap doesn't run your old framework's code. It's faster to describe what
+    you have and let the AI recreate it as Astro.
   </Accordion>
 
   <Accordion title="Document what you have">
-    Before migrating, write down all features, pages, and integrations. Use this as a checklist.
+    Before migrating, write down all pages, sections, and integrations. Use this
+    as a checklist.
   </Accordion>
 
   <Accordion title="Migrate incrementally">
-    Don't try to recreate everything at once. Build core features first, then add more.
+    Don't try to recreate everything at once. Build the homepage first, then add
+    pages and sections one at a time.
   </Accordion>
 
-  <Accordion title="Keep old app running">
-    Keep your old app accessible until the new one is fully tested and deployed.
+  <Accordion title="Keep old site running">
+    Keep your old site live until the new one is fully tested and your custom
+    domain is pointed over.
   </Accordion>
 </AccordionGroup>
 
 ## Getting Help
 
-Migration issues? We can help:
+Migration questions? We can help:
 
 - **Discord** - Community support and tips
 - **Email** - support@kleap.co for complex migrations

@@ -1,28 +1,24 @@
 ---
 title: "Publishing"
-description: "Deploy your app to production with one click"
+description: "Get a permanent, always-online production URL"
 ---
 
-Publish your app to get a permanent, always-online production URL.
+Kleap publishes your site for you — you get a permanent, always-online URL with no build step to manage.
 
-## One-Click Publishing
+## Automatic Publishing
 
-Publishing your app is simple:
-
-1. Click **Publish** in the top toolbar
-2. Wait for build to complete (~30-60 seconds)
-3. Your app is live!
+Publishing is automatic. When a generation finishes, Kleap builds your site and deploys it live — no separate "deploy" step required.
 
 <Info>
-  Publishing doesn't consume credits. Hosting is included with your Kleap account.
+  Publishing and hosting are **free** and never consume credits. You can also re-publish manually anytime from the **Publish** button.
 </Info>
 
 ## Your Production URL
 
-After publishing, you get a permanent URL:
+Once published, your site is live at a permanent URL:
 
 ```
-https://your-app-name.kleap.co
+https://your-app-name.kleap.io
 ```
 
 This URL:
@@ -30,88 +26,64 @@ This URL:
 - Is **always online** (24/7)
 - Is **publicly accessible**
 - Supports **HTTPS** automatically
+- Is served on **Cloudflare's global edge** for fast loading worldwide
 - Can be **shared** with anyone
 
 ## Preview vs Production
 
 | Aspect | Preview | Production |
 |--------|---------|------------|
-| URL | `3000-xxx.proxy.daytona.works` | `your-app.kleap.co` |
-| Uptime | During editing | 24/7 |
-| Access | Requires login | Public |
-| Performance | Development mode | Optimized |
-| Purpose | Building/testing | Live users |
+| Where | In the Kleap editor | `your-app.kleap.io` |
+| Uptime | While you build | 24/7 |
+| Access | You (and your team) | Public |
+| Purpose | Building and testing | Live visitors |
 
-## Updating Your App
+<Info>
+  The preview is a real build of your current files, so what you see is what visitors get.
+</Info>
 
-After initial publish:
+## Updating Your Site
 
-1. Make changes in Kleap
-2. Click **Publish** again
-3. New version goes live instantly
+After the initial publish:
+
+1. Make changes in Kleap (or ask the AI)
+2. Your changes are re-published automatically
+3. The new version goes live within seconds
 
 <Tip>
-  Each publish creates a new version. Your changes are deployed within seconds.
+  Each publish creates a new version. Use [Version History](/features/version-history) to roll back anytime.
 </Tip>
-
-## Build Settings
-
-Kleap handles build configuration automatically:
-
-- Next.js output optimized
-- Images compressed
-- Code minified
-- Assets cached on global CDN
 
 ## Deployment Status
 
 Track your deployment:
 
-- **Building** - Code is compiling
-- **Deploying** - Uploading to servers
-- **Ready** - Live and accessible
-- **Error** - Build failed (check logs)
+- **Building** — your site is compiling
+- **Deploying** — uploading to the edge
+- **Ready** — live and accessible
+- **Error** — build failed (see the error and re-try)
 
-### Viewing Logs
+If a deployment fails, the error is shown in the chat. Ask the AI to fix it, and it re-publishes automatically.
 
-If deployment fails:
-
-1. Click the deployment status
-2. View build logs
-3. Check for errors
-4. Fix issues and redeploy
-
-## Environment Variables
-
-For apps needing secrets (API keys):
-
-1. Go to **Settings** > **Environment**
-2. Add variables (KEY=value)
-3. They're injected at build time
-
-<Warning>
-  Never put secrets in your code. Use environment variables for API keys, database URLs, etc.
-</Warning>
-
-## Unpublishing
-
-To take your app offline:
-
-1. Go to **Settings**
-2. Click **Unpublish**
-3. Your app is no longer accessible
-
-<Info>
-  Unpublishing doesn't delete your app. You can republish anytime.
-</Info>
-
-## Next Steps
+## Custom Domains & Going Further
 
 <CardGroup cols={2}>
   <Card title="Custom Domains" icon="globe" href="/features/custom-domains">
-    Connect your own domain
+    Connect your own domain with free SSL
   </Card>
   <Card title="Analytics" icon="chart-line" href="/features/analytics">
-    Track your app's visitors
+    Track your site's visitors
   </Card>
 </CardGroup>
+
+## Unpublishing
+
+To take your site offline:
+
+1. Go to **Settings**
+2. Choose **Unpublish**
+3. Your site is no longer publicly accessible
+
+<Info>
+  Unpublishing doesn't delete your site — you can republish anytime.
+</Info>

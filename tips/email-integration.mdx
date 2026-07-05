@@ -3,11 +3,40 @@ title: "Email Integration"
 description: "Send emails from your app"
 ---
 
-Add email functionality to send notifications, confirmations, and newsletters.
+Kleap builds **Astro static sites**, so there are two very different email needs, and they work in very different ways:
 
-## Email Services
+- **Form notifications** — built in. When someone submits a KleapForm, you (and optionally the respondent) get emailed automatically. No external service, no setup.
+- **Custom / transactional email** — sending your own emails (welcome, password reset, order confirmation, newsletters). A static site has no server to send these, so it requires an external email provider called from a backend or serverless function. This is an advanced setup, not a one-click toggle.
 
-Recommended services for sending email:
+## Form Notifications (Built In)
+
+The simplest way to "get an email when something happens" is a **KleapForm**. Every form submission is:
+
+- Stored in your dashboard (Forms → responses)
+- Emailed to the site owner automatically
+
+On the **Pro** plan you also get:
+
+- **Respondent auto-reply** — automatically send a confirmation email back to the person who submitted the form
+- **Webhooks** — POST each submission to any external URL (Zapier, Make, your own endpoint) to trigger further automation
+
+Just ask the AI:
+
+```
+"Add a contact form that emails me when someone submits"
+```
+
+This covers most "email on submission" use cases — contact forms, lead capture, booking requests — with zero configuration.
+
+## Custom / Transactional Email (Advanced)
+
+If you need to send your own emails — welcome emails, password resets, order confirmations, newsletters — you need an external email provider. Because a Kleap site is **static** (no server runtime), the email-sending code has to run on a backend or serverless function you host separately, and your site calls it.
+
+Be realistic: this is a developer task, not a setting inside Kleap.
+
+### Email Services
+
+Common providers for sending email:
 
 | Service | Best For | Free Tier |
 |---------|----------|-----------|
@@ -16,36 +45,17 @@ Recommended services for sending email:
 | **SendGrid** | High volume | 100/day |
 | **Mailgun** | Flexibility | 5K/month |
 
-## Setting Up Resend
+### How It Works
 
-### 1. Create Account
+1. Sign up with a provider (e.g. Resend) and get an API key.
+2. Deploy a small serverless function (Cloudflare Worker, Vercel/Netlify function, etc.) that calls the provider's API. Your API key stays on the server — never ship it in the static site, where it would be publicly visible.
+3. Call that function from your site (for example, from a form handler).
 
-1. Go to [resend.com](https://resend.com)
-2. Sign up for free account
-3. Verify your email
-
-### 2. Add API Key
-
-1. Get API key from Resend dashboard
-2. Add to Kleap environment variables:
-
-```
-RESEND_API_KEY=re_xxxxx
-```
-
-### 3. Verify Domain (Optional)
-
-For custom from addresses, verify your domain in Resend.
-
-### 4. Send Emails
-
-```
-"Add email functionality using Resend to send welcome emails
-when users sign up"
-```
+### Example Serverless Function
 
 ```typescript
-// app/api/send-email/route.ts
+// A serverless function you host separately (e.g. Cloudflare Worker /
+// Vercel / Netlify function) — NOT part of the static Astro site.
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -68,7 +78,13 @@ export async function POST(request: Request) {
 }
 ```
 
+### Verify Your Domain
+
+For custom from addresses (`hello@yourdomain.com`), verify your domain with the provider and set up SPF, DKIM, and DMARC records. This is what keeps your email out of the spam folder.
+
 ## Common Email Types
+
+Example prompts once you have an email backend wired up:
 
 ### Welcome Email
 
@@ -93,7 +109,7 @@ purchase is completed"
 ### Newsletter
 
 ```
-"Add newsletter signup that stores emails in the database
+"Add newsletter signup that stores emails in Kleap Database
 and can send bulk emails"
 ```
 
@@ -136,21 +152,6 @@ export function WelcomeEmail({ name, dashboardUrl }) {
   );
 }
 ```
-
-## Supabase Auth Emails
-
-Supabase Auth includes built-in emails:
-
-- Signup confirmation
-- Password reset
-- Magic link login
-- Email change confirmation
-
-### Customize Auth Emails
-
-1. Go to Supabase Dashboard → Auth → Email Templates
-2. Customize templates with your branding
-3. Set your from address
 
 ## Email Best Practices
 
@@ -197,18 +198,11 @@ try {
 
 ## Email with Queues
 
-For high-volume or reliable email:
-
-### Using Supabase Edge Functions
-
-```typescript
-// Trigger email asynchronously
-await supabase.functions.invoke('send-email', {
-  body: { to, subject, html }
-});
-```
+For high-volume or reliable email, queue messages instead of sending them inline.
 
 ### Queue Emails in Database
+
+Store pending emails in **Kleap Database**:
 
 ```sql
 CREATE TABLE email_queue (
@@ -221,7 +215,7 @@ CREATE TABLE email_queue (
 );
 ```
 
-Then process with a cron job or edge function.
+Then process the queue from your serverless backend on a schedule (a cron job or scheduled function), sending each pending row and marking it sent.
 
 ## Testing Emails
 
@@ -239,32 +233,18 @@ Preview emails in different clients:
 - **Litmus** - Email testing
 - **Email on Acid** - Rendering tests
 
-## Environment Setup
-
-### Development
-
-```
-RESEND_API_KEY=re_test_xxxxx  # Test key
-```
-
-### Production
-
-```
-RESEND_API_KEY=re_xxxxx       # Live key
-```
-
 ## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="Emails not sending">
     - Check API key is correct
-    - Verify environment variable is set
-    - Check service dashboard for errors
+    - Verify it's set on your serverless backend
+    - Check the provider's dashboard for errors
     - Verify from address is authorized
   </Accordion>
 
   <Accordion title="Emails going to spam">
-    - Set up domain verification
+    - Set up domain verification (SPF, DKIM, DMARC)
     - Check email content for spam triggers
     - Use a reputable email service
     - Add proper unsubscribe link
@@ -277,6 +257,6 @@ RESEND_API_KEY=re_xxxxx       # Live key
   </Accordion>
 </AccordionGroup>
 
-<Card title="Supabase Integration" icon="database" href="/integrations/supabase">
-  Database for storing email logs
+<Card title="Kleap Database" icon="database" href="/integrations/supabase">
+  Store form responses, subscribers, and email logs
 </Card>

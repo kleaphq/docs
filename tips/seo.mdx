@@ -5,6 +5,8 @@ description: "Optimize your app for search engines"
 
 Make your Kleap app discoverable in search engines.
 
+Kleap builds **Astro** static sites, which are SEO- and GEO-friendly out of the box: pages are pre-rendered to fast, crawlable HTML, so search engines and AI crawlers see your content immediately. Your job is mostly to give the AI the right titles, meta tags, structured data, and image guidance.
+
 ## Basic SEO Setup
 
 ### Page Metadata
@@ -20,17 +22,21 @@ Add SEO metadata to the homepage with:
 
 ### Implementation
 
-```typescript
-// app/page.tsx
-export const metadata = {
-  title: 'MyApp - Build Apps Faster',
-  description: 'Create beautiful web apps in minutes with AI',
-  openGraph: {
-    title: 'MyApp - Build Apps Faster',
-    description: 'Create beautiful web apps in minutes with AI',
-    images: ['/og-image.png'],
-  },
-};
+In Astro, metadata lives in the page's `<head>` as standard tags:
+
+```astro
+---
+const title = 'MyApp - Build Apps Faster';
+const description = 'Create beautiful web apps in minutes with AI';
+---
+
+<head>
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content="/og-image.png" />
+</head>
 ```
 
 ## Essential SEO Elements
@@ -80,15 +86,16 @@ Generate a sitemap for search engines:
 "Add a sitemap.xml that includes all public pages"
 ```
 
-```typescript
-// app/sitemap.ts
-export default function sitemap() {
-  return [
-    { url: 'https://myapp.com', lastModified: new Date() },
-    { url: 'https://myapp.com/pricing', lastModified: new Date() },
-    { url: 'https://myapp.com/about', lastModified: new Date() },
-  ];
-}
+Astro generates the sitemap for you via its official sitemap integration — you just set your site URL. The AI wires this up so a `sitemap-index.xml` is produced at build time covering every page:
+
+```js
+// astro.config.mjs
+import sitemap from '@astrojs/sitemap';
+
+export default {
+  site: 'https://myapp.com',
+  integrations: [sitemap()],
+};
 ```
 
 ### Robots.txt
@@ -96,29 +103,26 @@ export default function sitemap() {
 Control what search engines can crawl:
 
 ```
-"Add a robots.txt that allows all crawlers but blocks /api and /dashboard"
+"Add a robots.txt that allows all crawlers but blocks /admin"
 ```
 
-```typescript
-// app/robots.ts
-export default function robots() {
-  return {
-    rules: { userAgent: '*', allow: '/', disallow: ['/api/', '/dashboard/'] },
-    sitemap: 'https://myapp.com/sitemap.xml',
-  };
-}
+Astro serves static files from `public/`, so a `robots.txt` there is picked up automatically:
+
+```
+# public/robots.txt
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+Sitemap: https://myapp.com/sitemap-index.xml
 ```
 
 ### Canonical URLs
 
-Prevent duplicate content issues:
+Prevent duplicate content issues with a canonical `<link>` in the page `<head>`:
 
-```typescript
-export const metadata = {
-  alternates: {
-    canonical: 'https://myapp.com/page',
-  },
-};
+```html
+<link rel="canonical" href="https://myapp.com/page" />
 ```
 
 ## Performance for SEO
@@ -128,8 +132,8 @@ Google considers page speed. Optimize:
 ### Image Optimization
 
 ```
-"Convert all images to use Next.js Image component
-with proper width, height, and alt text"
+"Optimize all images: correct sizes, lazy loading, and
+descriptive alt text — use Astro's <Image /> where possible"
 ```
 
 ### Core Web Vitals
@@ -139,7 +143,7 @@ Target these metrics:
 | Metric | Target | What It Measures |
 |--------|--------|-----------------|
 | **LCP** | < 2.5s | Loading speed |
-| **FID** | < 100ms | Interactivity |
+| **INP** | < 200ms | Interactivity (responsiveness) |
 | **CLS** | < 0.1 | Visual stability |
 
 ```
@@ -188,33 +192,25 @@ and from blog posts to related content"
 
 ### Open Graph
 
-For Facebook, LinkedIn:
+For Facebook, LinkedIn — add Open Graph meta tags to the page `<head>`:
 
-```typescript
-openGraph: {
-  title: 'Page Title',
-  description: 'Page description',
-  images: [
-    {
-      url: '/og-image.png',
-      width: 1200,
-      height: 630,
-    },
-  ],
-},
+```html
+<meta property="og:title" content="Page Title" />
+<meta property="og:description" content="Page description" />
+<meta property="og:image" content="/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 ```
 
 ### Twitter Cards
 
-For Twitter/X:
+For Twitter/X — add Twitter Card meta tags to the page `<head>`:
 
-```typescript
-twitter: {
-  card: 'summary_large_image',
-  title: 'Page Title',
-  description: 'Page description',
-  images: ['/twitter-image.png'],
-},
+```html
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Page Title" />
+<meta name="twitter:description" content="Page description" />
+<meta name="twitter:image" content="/twitter-image.png" />
 ```
 
 ### Creating OG Images

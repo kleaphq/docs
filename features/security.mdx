@@ -3,196 +3,122 @@ title: "Security"
 description: "Keep your app and data safe"
 ---
 
-Kleap includes security features to protect your app and users.
+Kleap builds fast **static Astro sites**, and a lot of security is handled for you. Because your published site is static, there's no server code or secret keys living inside it for attackers to reach. This page explains what's protected automatically and the few things you should still keep in mind.
+
+## Safe by default
+
+Every Kleap site ships with these protections built in:
+
+- **HTTPS everywhere** - SSL is automatic on your `{app}.kleap.io` address and on any custom domain you connect. Nothing to configure.
+- **No server secrets in the site** - Your published site is static HTML/CSS/JS. Kleap never bundles secret keys or credentials into it.
+- **Server-validated forms** - Form submissions are validated, sanitized, and rate-limited by Kleap before they reach you. No setup required.
+- **Secure headers** - XSS protection, HSTS, and other hardening headers are applied for you.
+- **Pre-build checks** - Before publishing, Kleap scans for accidentally exposed secrets and unsafe patterns.
 
 ## Pre-Build Security Checks
 
-Before deployment, Kleap automatically scans for:
+Before your site goes live, Kleap automatically scans for:
 
-- **Exposed secrets** - API keys, passwords in code
-- **Hardcoded credentials** - Database URLs, tokens
-- **Security vulnerabilities** - Known package issues
-- **Unsafe patterns** - SQL injection, XSS risks
+- **Exposed secrets** - Secret API keys or passwords accidentally placed in the site
+- **Hardcoded credentials** - Tokens or private keys that don't belong in a public site
+- **Unsafe patterns** - Risky code such as injecting unescaped user content (XSS risks)
 
 <Warning>
-  Never commit API keys or passwords directly in your code. Use environment variables instead.
+  Never paste secret keys, passwords, or private tokens into your prompts or anywhere in your site. Anything in a published static site is public. See "Keep secrets out of your site" below.
 </Warning>
 
-## Environment Variables
+## Keep secrets out of your site
 
-Store sensitive data securely:
+Your published site is static, which means **anything inside it can be viewed by anyone**. That's fine for the code that runs your pages, but it means secrets must never live there.
 
-### Adding Variables
+- **Publishable keys are OK.** Keys that are designed to be public — like a Stripe **publishable** key (`pk_live_...` / `pk_test_...`) — are safe to include in a site.
+- **Secret keys are never OK.** A secret key (`sk_live_...`), database password, or private API token must **never** appear in your site or in a prompt.
 
-1. Go to **Settings** > **Environment**
-2. Click **Add Variable**
-3. Enter key and value
-4. Variables are encrypted at rest
-
-### Using Variables
-
-In your code, access via `process.env`:
-
-```typescript
-const apiKey = process.env.STRIPE_SECRET_KEY;
+```txt
+✅ Safe in a site:  Stripe publishable key  pk_live_...
+❌ Never in a site: Stripe secret key       sk_live_...
+❌ Never in a site: passwords, private tokens, database credentials
 ```
 
-### Variable Scopes
+If a feature you want needs a secret to work, it belongs on a server — not in a static site. Kleap's built-in **Database** and **Forms** (below) already handle the common cases server-side for you.
 
-| Scope | Available In |
-|-------|--------------|
-| **Development** | Preview only |
-| **Production** | Published app only |
-| **All** | Both preview and production |
+## User accounts & dynamic data
 
-## Secure Defaults
+Need logins, saved data, or content that changes per user? Turn on the **Kleap Database** — a managed Postgres database with built-in user accounts. It's optional and available on demand; just ask the AI to add it when your app needs it. You don't connect or manage any outside database yourself.
 
-Kleap apps include security best practices:
+### Built-in accounts
 
-- **HTTPS only** - All traffic encrypted
-- **Secure headers** - XSS protection, HSTS
-- **CORS configured** - Cross-origin protections
-- **CSP ready** - Content Security Policy support
+Kleap Database includes **email + password user accounts** with the sign-up and log-in UI provided for you. Passwords are hashed and sessions are managed securely — you don't have to build any of it.
 
-## Authentication Security
+### Row-Level Security (RLS)
 
-When using Supabase Auth:
-
-- **Password hashing** - bcrypt with salt
-- **JWT tokens** - Secure session management
-- **Row Level Security** - Database-level access control
-- **OAuth support** - Google, GitHub, etc.
-
-### Best Practices
+Data access is protected by **Row-Level Security**, so each signed-in user can only see and change **their own rows**. This is the primary defense for your data: even though many users share one database, RLS keeps everyone's data separated at the database level.
 
 <AccordionGroup>
-  <Accordion title="Enable RLS on all tables">
-    Row Level Security ensures users only access their own data.
+  <Accordion title="Scope data to the signed-in user">
+    RLS ensures a user only ever reads or writes rows that belong to them. When you add data features through Kleap, ask the AI to make sure each table is scoped to the current user so no one can read someone else's records.
 
-    ```sql
-    ALTER TABLE posts ENABLE ROW LEVEL SECURITY;
-
-    CREATE POLICY "Users can view own posts"
-    ON posts FOR SELECT
-    USING (auth.uid() = user_id);
+    ```
+    Make sure my [posts] table is protected so each user
+    can only see and edit their own rows.
     ```
   </Accordion>
 
-  <Accordion title="Validate user input">
-    Never trust client-side data. Validate on the server.
+  <Accordion title="Protect pages behind a login">
+    For pages that should only be visible to signed-in users (like a dashboard or account area), put them behind a login gate. Ask the AI to add authentication so visitors must sign in before they can view the page.
 
-    ```typescript
-    // Good - server validation
-    if (!email || !email.includes('@')) {
-      throw new Error('Invalid email');
-    }
+    ```
+    Add a login and only let signed-in users see the dashboard page.
     ```
   </Accordion>
 
-  <Accordion title="Use parameterized queries">
-    Prevent SQL injection with prepared statements.
-
-    ```typescript
-    // Good - parameterized
-    const { data } = await supabase
-      .from('users')
-      .select()
-      .eq('id', userId);
-    ```
-  </Accordion>
-
-  <Accordion title="Implement rate limiting">
-    Protect APIs from abuse with rate limits.
+  <Accordion title="Let Kleap validate input">
+    You don't write server code, so input validation on saved data and form submissions is handled by Kleap. Still keep messages and inputs sensible on the page (e.g. required fields, reasonable lengths) for a good user experience.
   </Accordion>
 </AccordionGroup>
 
-## Data Protection
+## Forms
 
-### Database Security
-
-Supabase provides:
-
-- **Encryption at rest** - AES-256
-- **Encryption in transit** - TLS 1.3
-- **Automatic backups** - Daily snapshots
-- **Point-in-time recovery** - Restore to any moment
-
-### File Storage Security
-
-For uploaded files:
-
-- **Signed URLs** - Time-limited access
-- **Bucket policies** - Control who can access
-- **Size limits** - Prevent abuse
-
-## API Security
-
-### Protecting API Routes
-
-```typescript
-// Verify authentication
-export async function POST(request: Request) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    return new Response('Unauthorized', { status: 401 });
-  }
-
-  // Process request...
-}
-```
-
-### Rate Limiting
-
-Consider adding rate limiting for:
-
-- Login attempts
-- API endpoints
-- Form submissions
-- File uploads
+Contact and lead forms you add with Kleap are handled server-side by Kleap. Every submission is **validated, sanitized, and rate-limited** automatically, then delivered to your dashboard. There's nothing to configure and no keys to manage — spam and abuse protection is built in.
 
 ## Common Vulnerabilities
 
-### What Kleap Helps Prevent
+### What Kleap helps prevent
 
 | Vulnerability | Protection |
 |--------------|------------|
-| **XSS** | React auto-escapes, secure headers |
-| **CSRF** | SameSite cookies, token validation |
-| **SQL Injection** | Parameterized queries via Supabase |
-| **Exposed Secrets** | Pre-build scanning |
-| **Insecure Transport** | HTTPS enforced |
+| **Exposed secrets** | Pre-build scanning; static sites carry no server secret keys |
+| **XSS** | Content is auto-escaped by default; unsafe raw-HTML patterns are flagged |
+| **Insecure transport** | HTTPS enforced automatically on every site and custom domain |
+| **Form spam / abuse** | Kleap validates, sanitizes, and rate-limits every submission |
+| **Data leaks between users** | Row-Level Security scopes each user to their own rows |
 
-### What You Should Check
+### What you should keep in mind
 
-- **Broken Access Control** - Verify authorization on all routes
-- **Sensitive Data Exposure** - Don't log sensitive info
-- **Security Misconfiguration** - Review default settings
-- **Using Components with Vulnerabilities** - Keep packages updated
+- **Keep secrets out of the site** - Only publishable keys belong in a static site.
+- **Don't expose sensitive data** - Don't display private information on a public page.
+- **Protect the right pages** - Put account/dashboard pages behind a login.
+- **Scope data per user** - Confirm each data feature is limited to the signed-in user.
 
 ## Security Checklist
 
 Before launching, verify:
 
 <Steps>
-  <Step title="Environment Variables">
-    All secrets stored in environment variables, not code
+  <Step title="No secrets in the site">
+    Only publishable keys are used; no secret keys, passwords, or private tokens anywhere in the site or your prompts.
   </Step>
-  <Step title="Authentication">
-    User auth properly implemented with Supabase
+  <Step title="Accounts (if used)">
+    If your app has logins, they use Kleap's built-in accounts.
   </Step>
-  <Step title="Authorization">
-    RLS policies on all database tables
+  <Step title="Data scoped per user">
+    If you store data, Row-Level Security limits each user to their own rows.
   </Step>
-  <Step title="Input Validation">
-    All user input validated server-side
+  <Step title="Protected pages">
+    Private pages (dashboards, account areas) are behind a login.
   </Step>
   <Step title="HTTPS">
-    Custom domain has SSL certificate
-  </Step>
-  <Step title="Dependencies">
-    No known vulnerabilities in packages
+    Your site and any custom domain load over HTTPS (automatic with Kleap).
   </Step>
 </Steps>
 
@@ -206,11 +132,9 @@ Found a security issue? Contact us:
 
 ## Compliance
 
-Kleap infrastructure supports:
-
-- **GDPR** - EU data protection
-- **SOC 2** - Via Supabase
-- **HIPAA** - Available on Enterprise plans (contact us)
+- **GDPR** - Kleap supports EU data protection practices.
+- **Encryption in transit** - All traffic is served over HTTPS/TLS.
+- **Other requirements** - Have a specific compliance need? [Contact us](mailto:security@kleap.co).
 
 <Card title="Security Tips" icon="shield-check" href="/tips/security-tips">
   Detailed guide to avoiding security pitfalls

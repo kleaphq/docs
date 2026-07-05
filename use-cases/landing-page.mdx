@@ -168,7 +168,7 @@ Add an email signup form:
 - Can be in hero, floating bar, or dedicated section
 - Simple: just email input + button
 - Clear value proposition ("Get weekly tips")
-- Save emails to Supabase database
+- Collect emails with Kleap Forms (KleapForm)
 ```
 
 ### Form Implementation
@@ -177,9 +177,9 @@ Add an email signup form:
 Make the email form functional:
 - Validate email format
 - Check for duplicate submissions
-- Save to database
+- Save submissions with Kleap Forms (they land in your dashboard)
 - Show success message
-- Send to email service (optional)
+- Get an email notification on each signup
 ```
 
 ## Step 10: Footer
@@ -213,7 +213,7 @@ Ensure mobile-first design:
 Optimize for speed:
 - Compress and lazy load images
 - Minimize JavaScript
-- Use Next.js Image component
+- Use Astro's image handling (or `<img loading="lazy">`)
 - Target <3 second load time
 ```
 

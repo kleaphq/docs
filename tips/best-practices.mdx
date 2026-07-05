@@ -55,8 +55,8 @@ Or start blank if you have a unique idea.
   <Step title="Styling">
     Refine colors, typography, spacing
   </Step>
-  <Step title="Data">
-    Connect database, add real content
+  <Step title="Content">
+    Add real content; enable Kleap Database if you need saved data or logins
   </Step>
   <Step title="Functionality">
     Add interactions, forms, features
@@ -70,13 +70,14 @@ Or start blank if you have a unique idea.
 
 ### Let AI Follow Conventions
 
-Kleap uses standard Next.js structure:
+Kleap uses a standard Astro project structure:
 
 ```
-app/           → Pages and routes
-components/    → Reusable components
-lib/           → Utility functions
-public/        → Static assets
+src/pages/       → Pages and routes (.astro files)
+src/components/   → Reusable components (.astro and .tsx)
+src/layouts/     → Shared page layouts (Base.astro)
+src/styles/      → global.css and styles
+public/          → Static assets (images, fonts)
 ```
 
 Don't fight this structure. Let AI organize code appropriately.
@@ -142,16 +143,22 @@ see and edit their own posts"
 
 ### Optimize Images
 
-```
-"Use Next.js Image component for all images with
-appropriate sizes and lazy loading"
-```
-
-### Minimize Client Components
+Kleap optimizes images for you — just use normal `<img>` tags or Astro's
+asset handling. There's no `next/image` component.
 
 ```
-"Make this a server component that fetches data
-on the server side"
+"Add these images with appropriate sizes, alt text,
+and lazy loading"
+```
+
+### Keep It Static
+
+Astro renders static HTML by default. Only add interactivity where you
+actually need it, using React islands.
+
+```
+"Make this section a static component, and only make the
+image carousel interactive"
 ```
 
 ### Add Loading States
@@ -192,14 +199,16 @@ After each change:
 - [ ] Database queries work
 - [ ] Environment variables set
 
-### Environment Variables
+### Configuration & Secrets
 
-Move all secrets to environment variables:
+Kleap sites are static, so any value baked into the site is public. Use Astro build-time config for **non-secret** values only:
 
 ```
-"Move the API key to an environment variable and
-update the code to use process.env.API_KEY"
+"Move the public API base URL to a PUBLIC_ environment
+variable and read it with import.meta.env.PUBLIC_API_URL"
 ```
+
+Never put a real secret (a private API key, token, or password) in a static site — it ships to the browser. Secrets belong in an external backend or serverless function. For payments use Stripe payment links (publishable key only); for form emails use built-in Forms.
 
 ## Common Mistakes to Avoid
 

@@ -117,7 +117,9 @@ API fetch is failing with a network error.
 Can you check the API endpoint and error handling?
 ```
 
-## React/Next.js Errors
+## React Island Errors
+
+These happen inside interactive React components (islands) on your Astro site.
 
 ### Hydration mismatch
 
@@ -125,7 +127,7 @@ Can you check the API endpoint and error handling?
 Hydration failed because the initial UI does not match what was rendered on the server
 ```
 
-**Cause**: Server and client render different content.
+**Cause**: The static HTML and the hydrated island render different content.
 
 **Fix**:
 ```
@@ -257,10 +259,11 @@ AuthApiError: Invalid login credentials
 ### Missing environment variable
 
 ```
-Error: Missing environment variable: NEXT_PUBLIC_SUPABASE_URL
+Error: Missing environment variable: PUBLIC_API_URL
 ```
 
-**Cause**: Required variable not set.
+**Cause**: Required variable not set. (In Astro, browser-exposed variables are
+prefixed with `PUBLIC_`.)
 
 **Fix**:
 1. Go to Settings > Environment
@@ -277,9 +280,9 @@ Error: Missing environment variable: NEXT_PUBLIC_SUPABASE_URL
 | `Hydration` | Server/client mismatch | Fix SSR |
 | `Invalid hook` | Hook misuse | Check hook rules |
 | `Too many re-renders` | Infinite loop | Fix useEffect/setState |
-| `RLS policy` | Security policy | Check Supabase RLS |
+| `RLS policy` | Security policy | Check RLS policies |
 | `Failed to fetch` | Network/API issue | Check endpoint |
-| `NEXT_PUBLIC_` | Env var missing | Add to settings |
+| `PUBLIC_` | Env var missing | Add to settings |
 
 ## Getting More Help
 

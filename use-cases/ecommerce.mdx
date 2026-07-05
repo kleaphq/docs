@@ -18,17 +18,23 @@ An e-commerce store with:
 ## Prerequisites
 
 - Kleap account
-- Supabase account
-- Stripe account
+- Stripe account (for checkout)
 
-## Step 1: Set Up Database
+Product data can be hardcoded in your site or stored in **Kleap Database** — a managed Postgres database built into Kleap (no separate account to connect).
 
-### Create Tables
+## Step 1: Store Your Products
+
+Your catalog can live in one of two places:
+
+- **Static data** — hardcode the product list in your site. Simplest, great for a small catalog that rarely changes.
+- **Kleap Database** — a managed Postgres database built into Kleap (no separate account). Best when you want to add or edit products without redeploying.
+
+### Option: Kleap Database
 
 ```
-Create database tables for an e-commerce store:
+Enable Kleap Database and create a products table:
 
-1. products
+products
    - id (uuid, primary key)
    - name (text)
    - description (text)
@@ -38,32 +44,18 @@ Create database tables for an e-commerce store:
    - inventory (integer)
    - created_at (timestamp)
 
-2. orders
-   - id (uuid, primary key)
-   - user_id (uuid, nullable)
-   - email (text)
-   - status (text: 'pending', 'paid', 'shipped', 'delivered')
-   - total (numeric)
-   - stripe_session_id (text)
-   - created_at (timestamp)
-
-3. order_items
-   - id (uuid, primary key)
-   - order_id (uuid, references orders)
-   - product_id (uuid, references products)
-   - quantity (integer)
-   - price (numeric)
-
 Make products publicly readable.
 ```
+
+Orders and payments are handled by Stripe's hosted checkout (Step 5), so you don't need orders tables in your site — Stripe records every order for you.
 
 ### Add Sample Products
 
 ```
-Add 6 sample products to the database:
+Add 6 sample products (static data or in Kleap Database):
 - Mix of different categories
 - Realistic prices
-- Placeholder images from Unsplash
+- AI-generated or your own product images
 ```
 
 ## Step 2: Product Catalog
@@ -158,71 +150,45 @@ Add a cart icon to the navigation that:
 - Updates dynamically when items added
 ```
 
-## Step 5: Checkout
+## Step 5: Checkout with Stripe
 
-### Stripe Setup
+Your store is a static Astro site, so checkout runs on Stripe's hosted pages. You only ever use your Stripe **publishable** key — no secret key (`sk_...`) and no server code live in your site.
 
-Add Stripe environment variables:
+### Set Up Stripe
 
-```
-STRIPE_SECRET_KEY=sk_...
-STRIPE_PUBLISHABLE_KEY=pk_...
-```
+1. In your Stripe Dashboard, create a **Payment Link** or **Buy Button** for each product (or a **Pricing Table** for a set of products).
+2. Copy each product's link or Buy Button embed snippet.
 
-### Checkout Flow
+### Add Checkout
 
 ```
-Create a checkout flow:
-1. Cart review page showing all items
-2. Shipping address form
-3. Create Stripe checkout session with cart items
-4. Redirect to Stripe for payment
-5. Success page after payment
+Wire up checkout:
+- Point each product's "Buy" action to its Stripe Payment Link (or embed the Buy Button)
+- Clicking Buy sends the shopper to Stripe's hosted checkout page
+- Stripe collects payment and shipping details, then emails a receipt
+- After payment, Stripe redirects back to a success page on your store
 ```
 
-### Create Checkout Session
-
-```
-Create an API route for Stripe checkout:
-- Receive cart items from client
-- Create line items for Stripe
-- Create checkout session
-- Return session URL
-- Include success and cancel URLs
-```
+<Note>
+  Stripe Payment Links and Buy Buttons each sell one product (or a fixed bundle). A fully dynamic cart that totals arbitrary items into a single Stripe Checkout Session needs a backend beyond a static site — for that, use a Payment Link per product, a Stripe Pricing Table, or add a small server/serverless function as an advanced step.
+</Note>
 
 ### Order Confirmation
 
 ```
-Create an order confirmation page that:
-- Shows after successful payment
-- Displays order number
-- Lists ordered items
-- Shows total paid
-- Includes "Continue Shopping" button
-- Sends to email if logged in
+Create an order confirmation / success page that:
+- Shows after Stripe redirects back from a successful payment
+- Thanks the customer
+- Includes a "Continue Shopping" button
 ```
 
-## Step 6: Order Management (Optional)
+Stripe emails the receipt and records the order in your Stripe Dashboard.
 
-### Orders Page
+## Step 6: Orders (Optional)
 
-```
-Create an orders page for logged-in users:
-- List of past orders
-- Order status
-- Order details on click
-- Reorder button
-```
+Every order and payment lives in your **Stripe Dashboard** — view orders, payment status, and customer details there without adding anything to your site.
 
-### Admin Dashboard (Optional)
-
-```
-Create a simple admin page to:
-- View all orders
-- Update order status
-- View basic sales stats
-```
+An in-app orders page or admin panel (past orders, status updates, sales stats) needs to read payment data from a backend, which is beyond a static site. Use the Stripe Dashboard for order management, or add a small server/serverless layer as an advanced step.
 
 ## Step 7: Polish
 
@@ -261,7 +227,7 @@ Optimize for mobile:
 - [ ] All products display correctly
 - [ ] Add to cart works
 - [ ] Cart updates correctly
-- [ ] Checkout creates Stripe session
+- [ ] Buy buttons open Stripe checkout
 - [ ] Payment processes successfully
 - [ ] Order confirmation shows
 - [ ] Mobile works well
@@ -269,9 +235,9 @@ Optimize for mobile:
 ### Deploy
 
 1. Click **Publish**
-2. Test with Stripe test cards
-3. Switch to live Stripe keys
-4. Connect custom domain
+2. Test checkout in Stripe test mode
+3. Switch your Payment Links / Buy Buttons to live mode
+4. Connect a custom domain
 
 ## Enhancements
 
@@ -292,7 +258,7 @@ After launching, consider adding:
 3. Products listing page
 4. Product detail page
 5. Shopping cart functionality
-6. Stripe checkout integration
+6. Stripe checkout (Payment Links / Buy Buttons)
 7. Order confirmation
 8. Polish and mobile optimization
 
