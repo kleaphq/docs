@@ -2,9 +2,6 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Kleap Documentation",
-  "redirects": [
-    { "source": "/integrations/supabase", "destination": "/integrations/database" }
-  ],
   "colors": {
     "primary": "#FF0055",
     "light": "#FF3377",
@@ -143,6 +140,7 @@
               "integrations/overview",
               "integrations/github",
               "integrations/database",
+              "integrations/supabase",
               "integrations/stripe",
               "integrations/ai-models"
             ]

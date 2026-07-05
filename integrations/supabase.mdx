@@ -1,0 +1,83 @@
+---
+title: "Supabase"
+description: "Connect your own Supabase project to your site"
+---
+
+Prefer to run your own backend? You can connect your own **Supabase** project to a Kleap site. This is the "bring your own database" option — for full control, if you already use Supabase, or if you want Supabase-specific features.
+
+<Info>
+  Not sure which to pick? **Kleap Database** is the built-in, zero-setup option — no account, managed for you. Choose **Supabase** when you want to own and manage the backend yourself. See [Kleap Database](/integrations/database).
+</Info>
+
+## Kleap Database vs. Your Own Supabase
+
+| | Kleap Database | Your own Supabase |
+|---|----------------|-------------------|
+| Setup | Built in, on demand | You create a Supabase project |
+| Managed by | Kleap | You |
+| Best for | Fastest path, most sites | Full control, existing Supabase users |
+| Where data lives | In Kleap | In your Supabase account |
+
+## Connecting Your Supabase
+
+<Steps>
+  <Step title="Create a Supabase project">
+    In your [Supabase dashboard](https://supabase.com/dashboard), create a project and copy two values from **Project Settings → API**: your **Project URL** and your **anon (public) key**.
+  </Step>
+  <Step title="Add the keys and wire it up">
+    These are safe to use in the browser. Give them to the AI and describe what you want:
+
+    ```
+    Connect my Supabase project.
+    URL: https://xxxx.supabase.co
+    Anon key: eyJ...
+    Load posts from the "posts" table on the blog page.
+    ```
+  </Step>
+  <Step title="Build with it">
+    Ask the AI to read and write your tables, add login, or show per-user data. It uses the Supabase client from your site's interactive parts.
+  </Step>
+</Steps>
+
+## Keys & Security
+
+Kleap sites are static, so anything in the site is public. That's fine for Supabase's **anon (public) key** — it's designed to be exposed, and your data is protected by the **Row Level Security** policies you set in Supabase.
+
+<Warning>
+  Only use the **anon / public** key in your site. **Never** put your Supabase **`service_role` secret key** in a website — it bypasses all security. Service-role operations must run on a backend you control (a serverless function), not in the static site.
+</Warning>
+
+## What Works From a Static Site
+
+Using the public key from your site's interactive parts, you can:
+
+- **Read & write data** — protected per-user by your Row Level Security policies
+- **User accounts** — Supabase Auth (email/password, magic link, OAuth), client-side
+- **File storage** — public buckets or signed URLs
+- **Realtime** — live updates when table data changes
+
+### Needs a Backend
+
+Anything requiring the **`service_role`** key — admin writes that bypass RLS, server-only logic, secure webhooks — must run in a separate serverless function, not in the static site.
+
+## Managing Your Backend
+
+Schema, RLS policies, auth providers, and storage buckets are managed in your **Supabase dashboard**, the same as any Supabase project. Ask the AI to generate the SQL or policies, then apply them in Supabase.
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Turn on Row Level Security">
+    Enable RLS on every table that holds user data. Since the public key is exposed in the browser, RLS is what keeps data private.
+  </Accordion>
+  <Accordion title="Keep the service_role key server-side">
+    Never ship it in your site. Use it only from a backend you control.
+  </Accordion>
+  <Accordion title="Prefer Kleap Database for simple needs">
+    If you just need saved data or logins without managing a backend, the built-in [Kleap Database](/integrations/database) is faster.
+  </Accordion>
+</AccordionGroup>
+
+<Card title="Prefer zero setup?" icon="database" href="/integrations/database">
+  Use the built-in Kleap Database — no external account
+</Card>
