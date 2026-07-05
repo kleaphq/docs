@@ -36,18 +36,18 @@ Be realistic: this is a developer task, not a setting inside Kleap.
 
 ### Email Services
 
-Common providers for sending email:
+You'll use an external email service to do the actual sending. When choosing one, compare on:
 
-| Service | Best For | Free Tier |
-|---------|----------|-----------|
-| **Resend** | Developer-friendly | 3K/month |
-| **Postmark** | Transactional email | 100/month |
-| **SendGrid** | High volume | 100/day |
-| **Mailgun** | Flexibility | 5K/month |
+| Consideration | What to look for |
+|---------------|------------------|
+| **Developer experience** | A simple API and clear docs |
+| **Deliverability** | A strong transactional-email reputation |
+| **Volume & pricing** | A free tier and rates that fit your send volume |
+| **Domain setup** | Support for SPF, DKIM, and DMARC verification |
 
 ### How It Works
 
-1. Sign up with a provider (e.g. Resend) and get an API key.
+1. Sign up with an external email service and get an API key.
 2. Deploy a small serverless function (Cloudflare Worker, Vercel/Netlify function, etc.) that calls the provider's API. Your API key stays on the server — never ship it in the static site, where it would be publicly visible.
 3. Call that function from your site (for example, from a form handler).
 
@@ -56,25 +56,25 @@ Common providers for sending email:
 ```typescript
 // A serverless function you host separately (e.g. Cloudflare Worker /
 // Vercel / Netlify function) — NOT part of the static Astro site.
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
+// It calls your chosen email service's HTTP API. The API key stays
+// here on the server, never in the static site.
 export async function POST(request: Request) {
   const { to, subject, html } = await request.json();
 
-  const { data, error } = await resend.emails.send({
-    from: 'hello@yourdomain.com',
-    to,
-    subject,
-    html,
+  const res = await fetch('https://api.your-email-service.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.EMAIL_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ from: 'hello@yourdomain.com', to, subject, html }),
   });
 
-  if (error) {
-    return Response.json({ error }, { status: 500 });
+  if (!res.ok) {
+    return Response.json({ error: await res.text() }, { status: 500 });
   }
 
-  return Response.json({ data });
+  return Response.json(await res.json());
 }
 ```
 
@@ -188,7 +188,7 @@ if (Date.now() - lastSent < 60000) {
 
 ```typescript
 try {
-  await resend.emails.send({ ... });
+  await sendEmail({ to, subject, html });
 } catch (error) {
   console.error('Email failed:', error);
   // Log to database for retry
@@ -221,17 +221,14 @@ Then process the queue from your serverless backend on a schedule (a cron job or
 
 ### Development
 
-Use Resend's test mode or services like:
-
-- **Mailtrap** - Catches all test emails
-- **Ethereal** - Fake SMTP for testing
+Use your email service's test or sandbox mode, or a dedicated email-testing
+tool that captures messages instead of delivering them (many provide a fake
+SMTP inbox for local testing).
 
 ### Check Rendering
 
-Preview emails in different clients:
-
-- **Litmus** - Email testing
-- **Email on Acid** - Rendering tests
+Preview how your email looks across different email clients with an
+email-rendering tool before sending to real recipients.
 
 ## Troubleshooting
 
@@ -257,6 +254,6 @@ Preview emails in different clients:
   </Accordion>
 </AccordionGroup>
 
-<Card title="Kleap Database" icon="database" href="/integrations/supabase">
+<Card title="Kleap Database" icon="database" href="/features/forms-data">
   Store form responses, subscribers, and email logs
 </Card>

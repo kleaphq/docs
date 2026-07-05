@@ -95,14 +95,14 @@ Kleap Database queries?
 **Symptom**: Data exists but queries return empty array
 
 **Causes**:
-- RLS policies blocking access
+- Per-user data rules blocking access (the row belongs to another user)
 - Wrong table name
 - Query filters too restrictive
 
 **Solution**:
 ```
 This query returns empty but there's data in the table.
-Can you check the RLS policies and query?
+Can you check the data access rules and the query?
 ```
 
 ### Auth Not Working
@@ -231,7 +231,7 @@ Can you optimize the component to prevent unnecessary renders?
 | Styling broken | Clear browser cache, refresh |
 | Auth not working | Check Kleap Database is enabled |
 | Deploy failed | Check build logs |
-| Data not loading | Check RLS policies |
+| Data not loading | Check per-user data rules |
 | Changes lost | Use version history to restore |
 
 ## When Nothing Works

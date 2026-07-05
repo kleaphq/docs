@@ -3,7 +3,7 @@ title: "Kleap Database"
 description: "A built-in database and user accounts for your app"
 ---
 
-**Kleap Database** is a built-in database and authentication system for your site. When your app needs to save data or let people log in, Kleap can add a real database — powered by **Postgres with row-level security** — without you managing any infrastructure.
+**Kleap Database** is a built-in database and authentication system for your site. When your app needs to save data or let people log in, Kleap can add a real database — a built-in database, kept private per user — without you managing any infrastructure.
 
 <Info>
   Kleap Database is **optional and added on demand**. A simple marketing or landing site doesn't need it — it stays fast and static. You add a database only when your app needs stored data or user accounts.
@@ -44,7 +44,7 @@ Add a login and signup page, and protect the /dashboard
 page so only logged-in users can see it
 ```
 
-Behind the scenes each user only sees their own rows (enforced by row-level security), so data stays private by default.
+Behind the scenes each user only sees their own data, so it stays private by default.
 
 <Warning>
   Your site's user accounts (visitors logging into **your** app) are separate from your **Kleap account** (how you log in to build). They're two different systems.
@@ -66,7 +66,7 @@ Add a "status" field to bookings with values pending, confirmed, cancelled
 Create a reviews table with name, rating, and comment
 ```
 
-Generated pages read and write data with a simple client (scoped per user by row-level security):
+Generated pages read and write data with a simple client (each user only sees their own data):
 
 ```tsx
 // Illustrative — Kleap writes this for you
@@ -88,14 +88,10 @@ await db.from("bookings").insert({ date, time, name });
   <Accordion title="Use Forms for simple submissions">
     Contact and lead forms are better served by built-in Forms, which notify you by email automatically.
   </Accordion>
-  <Accordion title="Let row-level security do its job">
+  <Accordion title="Keep private data private">
     Each user sees only their own data by default. Keep it that way for anything private.
   </Accordion>
 </AccordionGroup>
-
-## A Note on Supabase
-
-Earlier versions of Kleap asked you to connect your own **Supabase** project for a database. That's no longer needed — **Kleap Database** is built in and managed for you. (Kleap's own platform still runs on Supabase internally, but your site uses Kleap Database.)
 
 <Card title="Collect submissions with Forms" icon="table" href="/features/forms-data">
   For contact and lead forms, use built-in Forms

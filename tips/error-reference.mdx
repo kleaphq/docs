@@ -179,18 +179,18 @@ Usually caused by:
 
 ## Database Errors
 
-### RLS policy violation
+### Permission denied on a row
 
 ```
-new row violates row-level security policy for table "posts"
+This action isn't allowed for the current user on table "posts"
 ```
 
-**Cause**: RLS blocking the operation.
+**Cause**: Data is scoped per user, and this operation isn't permitted for the signed-in user.
 
 **Fix**:
 ```
-Getting RLS policy violation when [inserting/updating/deleting].
-Can you check and fix the RLS policies for this table?
+Getting a permission error when [inserting/updating/deleting] data.
+Can you check that the data rules let the right users read and write this table?
 ```
 
 ---
@@ -231,7 +231,7 @@ Can you add a check for existing records or use upsert?
 ### Session not found
 
 ```
-AuthSessionMissingError: Auth session missing
+Auth session missing — no signed-in user
 ```
 
 **Cause**: User not logged in or session expired.
@@ -247,7 +247,7 @@ Can you add authentication check and redirect to login if not authenticated?
 ### Invalid login credentials
 
 ```
-AuthApiError: Invalid login credentials
+Invalid login credentials
 ```
 
 **Cause**: Wrong email or password.
@@ -280,7 +280,7 @@ prefixed with `PUBLIC_`.)
 | `Hydration` | Server/client mismatch | Fix SSR |
 | `Invalid hook` | Hook misuse | Check hook rules |
 | `Too many re-renders` | Infinite loop | Fix useEffect/setState |
-| `RLS policy` | Security policy | Check RLS policies |
+| `not allowed` | Per-user data rule | Check table access rules |
 | `Failed to fetch` | Network/API issue | Check endpoint |
 | `PUBLIC_` | Env var missing | Add to settings |
 

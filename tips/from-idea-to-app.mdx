@@ -96,7 +96,7 @@ Create the basic structure with:
 
 2. "Add a tasks list component showing task name, due date, and status"
 
-3. "Create a Supabase table for tasks with fields: id, title,
+3. "Add a database table for tasks with fields: id, title,
    description, due_date, status, user_id"
 
 4. "Connect the tasks list to fetch from the database"
@@ -132,8 +132,8 @@ If your app needs users:
 Ensure data belongs to users:
 
 ```
-"Update the tasks table to include user_id and add RLS
-policies so users only see their own tasks"
+"Update the tasks table to include user_id and scope it
+so users only see their own tasks"
 ```
 
 ## Phase 5: Polish
@@ -268,7 +268,7 @@ via email one day before"
   </Accordion>
 
   <Accordion title="Skipping auth security">
-    Always enable RLS. One security hole can ruin your app.
+    Always scope data to the signed-in user so each person sees only their own. One security hole can ruin your app.
   </Accordion>
 </AccordionGroup>
 

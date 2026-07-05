@@ -20,7 +20,7 @@ A project management SaaS with:
 - Kleap account
 - Stripe account (for payment links)
 
-Dynamic data and user accounts use **Kleap Database** — a managed Postgres database built into Kleap (with built-in email/password accounts and Row Level Security). It's opt-in: enable it when a step needs it. You don't connect your own database.
+Dynamic data and user accounts use **Kleap Database** — a managed database built into Kleap (with built-in email/password accounts, where each user only sees their own data). It's opt-in: enable it when a step needs it. You don't connect your own database.
 
 ## Step 1: Start with Template
 
@@ -47,7 +47,7 @@ Update the landing page:
 
 ## Step 3: Set Up the Database
 
-Enable **Kleap Database** for this app. It's a managed Postgres database with built-in email/password accounts, so you can link data to the signed-in user and protect it with Row Level Security — no external database to connect.
+Enable **Kleap Database** for this app. It's a managed database with built-in email/password accounts, so you can link data to the signed-in user and keep it private so each user only sees their own data — no external database to connect.
 
 ### Create Tables
 
@@ -71,7 +71,7 @@ Create these database tables:
    - due_date (date, nullable)
    - created_at (timestamp)
 
-Add RLS policies so users only see their own projects and tasks.
+Add access rules so each user only sees their own projects and tasks.
 ```
 
 ## Step 4: Build the Dashboard

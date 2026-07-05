@@ -48,11 +48,11 @@ password / private token / database credential
 
 ## Protecting user data
 
-If your app has logins or saves data, turn on the **Kleap Database** — managed Postgres with built-in user accounts. You don't connect or manage an outside database.
+If your app has logins or saves data, turn on the **Kleap Database** — a managed database with built-in user accounts. You don't connect or manage an outside database.
 
-### Row-Level Security keeps users separated
+### Each user only sees their own data
 
-**Row-Level Security (RLS)** is your primary defense: each signed-in user can only see and change **their own rows**, even though everyone shares one database. When you add data features, ask the AI to confirm the data is scoped to the current user.
+**Per-user data isolation** is your primary defense: each signed-in user can only see and change **their own data**, even though everyone shares one database. When you add data features, ask the AI to confirm the data is scoped to the current user.
 
 ```
 Can you check that my tables are protected so users can only
@@ -92,7 +92,7 @@ Content you display is escaped automatically, so ordinary text is safe. The risk
 
 ### Data leaks between users
 
-The way one user ends up seeing another user's data is missing per-user scoping. **Row-Level Security** prevents this — confirm each data feature limits users to their own rows.
+The way one user ends up seeing another user's data is missing per-user scoping. **Per-user data isolation** prevents this — confirm each data feature limits users to their own data.
 
 ### Transport security
 
@@ -108,7 +108,7 @@ Before launching:
 
 - [ ] No secret keys, passwords, or private tokens anywhere in the site (only publishable keys)
 - [ ] No secrets pasted into prompts
-- [ ] If you store data, users are scoped to their own rows (Row-Level Security)
+- [ ] If you store data, each signed-in user can only access their own data
 - [ ] Private pages (dashboards, account areas) are behind a login
 - [ ] Error messages don't leak sensitive info
 - [ ] HTTPS enabled (automatic with Kleap)

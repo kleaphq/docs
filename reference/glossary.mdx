@@ -11,7 +11,7 @@ Quick reference for terms used in Kleap and web development.
 A way for different software applications to communicate. Kleap sites are static-first; server-side logic and data are handled by the built-in Kleap Database when you need them.
 
 ### API Route
-A server-side endpoint that handles HTTP requests (a common pattern in frameworks like Next.js). Kleap sites are static — use the built-in Kleap Database for dynamic behavior instead.
+A server-side endpoint that handles HTTP requests (a common pattern in traditional web frameworks). Kleap sites are static — use the built-in Kleap Database for dynamic behavior instead.
 
 ### app_files
 Kleap's managed store and source of truth for every file in your site. Kleap versions your files for you — there's no repo, sandbox, or local checkout to manage.
@@ -124,7 +124,7 @@ A secure way to transmit information between parties, commonly used for authenti
 AI-powered platform for building Astro websites using natural language.
 
 ### Kleap Database
-Kleap's optional built-in database: managed Postgres with Row Level Security and built-in email/password accounts. Enable it on demand — you don't connect your own Supabase.
+Kleap's optional built-in database: a managed database that keeps each user's data private, with built-in email/password accounts. Enable it on demand — there's no external database to connect.
 
 ## L
 
@@ -147,9 +147,6 @@ Code that runs between a request and response, often for auth or redirects.
 
 ## N
 
-### Next.js
-A React framework for building web applications. (Kleap builds Astro sites, not Next.js.)
-
 ### Node.js
 JavaScript runtime that allows JavaScript to run on servers.
 
@@ -165,9 +162,6 @@ Standard for authorization that allows users to grant access without sharing pas
 Protocol for controlling how your content appears when shared on social media.
 
 ## P
-
-### PostgreSQL
-A relational database system. The built-in Kleap Database runs on Postgres.
 
 ### Preview
 The live view of your site while you build in Kleap — a real, ephemeral Astro build rendered in the editor.
@@ -192,9 +186,6 @@ Design approach that adapts to different screen sizes.
 ### REST (Representational State Transfer)
 Architectural style for designing networked applications.
 
-### RLS (Row Level Security)
-A Postgres feature that controls data access at the row level. Used by the built-in Kleap Database.
-
 ### Route
 A URL path that maps to a specific page or API endpoint.
 
@@ -213,7 +204,7 @@ The structure of your database (tables, columns, relationships).
 Practices to improve your site's visibility in search results.
 
 ### Server Component
-A React component that renders on the server. Default in Next.js App Router.
+A React component that renders on the server (a concept in some frameworks). Kleap sites are static Astro, rendered ahead of time.
 
 ### Serverless
 Computing model where the cloud provider manages servers automatically.
@@ -223,9 +214,6 @@ Rendering pages on the server before sending to the browser.
 
 ### State
 Data that determines a component's behavior and rendering.
-
-### Supabase
-Open-source Firebase alternative providing database, auth, and storage.
 
 ## T
 

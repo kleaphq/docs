@@ -41,8 +41,8 @@ Lovable and Kleap are similar in concept. Here's what to know:
 |---------|---------|-------|
 | **Framework** | Vite + React | Astro 5 (static, React islands) |
 | **Styling** | Tailwind | Tailwind CSS |
-| **Hosting** | Lovable Cloud | Kleap Hosting (Cloudflare edge) |
-| **Database** | Supabase | Kleap Database (built-in, opt-in) |
+| **Hosting** | Lovable Cloud | Kleap Hosting (a global edge network) |
+| **Database** | External database | Kleap Database (built-in, opt-in) |
 | **Pricing** | Message-based | Credit-based |
 
 ### Migration Steps
@@ -60,7 +60,7 @@ Lovable and Kleap are similar in concept. Here's what to know:
 | Chat | AI Chat |
 | Preview | Live Preview |
 | Deploy | Publish (automatic) |
-| Supabase | Kleap Database |
+| External database | Kleap Database |
 | Forms | KleapForm (built-in forms) |
 
 ## From Bolt.new
@@ -155,9 +155,9 @@ Recreate my current homepage. It has:
 
 You do **not** connect an external database. Kleap provides these when you need them:
 
-- **Kleap Database** — a built-in Postgres database with Row Level Security and
-  built-in email/password user accounts. It's opt-in and added on demand, so
-  simple sites stay purely static.
+- **Kleap Database** — a built-in, managed database with built-in email/password
+  user accounts, where each user only sees their own data. It's opt-in and added
+  on demand, so simple sites stay purely static.
 - **KleapForm** — built-in forms. Submissions land in your dashboard's Data
   panel and can trigger email notifications, no backend to set up.
 - **Payments** — connect Stripe Payment Links or Buy Buttons (publishable key

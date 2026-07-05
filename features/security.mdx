@@ -44,19 +44,19 @@ If a feature you want needs a secret to work, it belongs on a server — not in 
 
 ## User accounts & dynamic data
 
-Need logins, saved data, or content that changes per user? Turn on the **Kleap Database** — a managed Postgres database with built-in user accounts. It's optional and available on demand; just ask the AI to add it when your app needs it. You don't connect or manage any outside database yourself.
+Need logins, saved data, or content that changes per user? Turn on the **Kleap Database** — a managed database with built-in user accounts. It's optional and available on demand; just ask the AI to add it when your app needs it. You don't connect or manage any outside database yourself.
 
 ### Built-in accounts
 
 Kleap Database includes **email + password user accounts** with the sign-up and log-in UI provided for you. Passwords are hashed and sessions are managed securely — you don't have to build any of it.
 
-### Row-Level Security (RLS)
+### Each user sees only their own data
 
-Data access is protected by **Row-Level Security**, so each signed-in user can only see and change **their own rows**. This is the primary defense for your data: even though many users share one database, RLS keeps everyone's data separated at the database level.
+Data access is scoped per user, so each signed-in user can only see and change **their own rows**. This is the primary defense for your data: even though many users share one database, Kleap keeps everyone's data separated at the database level.
 
 <AccordionGroup>
   <Accordion title="Scope data to the signed-in user">
-    RLS ensures a user only ever reads or writes rows that belong to them. When you add data features through Kleap, ask the AI to make sure each table is scoped to the current user so no one can read someone else's records.
+    Kleap ensures a user only ever reads or writes rows that belong to them. When you add data features through Kleap, ask the AI to make sure each table is scoped to the current user so no one can read someone else's records.
 
     ```
     Make sure my [posts] table is protected so each user
@@ -91,7 +91,7 @@ Contact and lead forms you add with Kleap are handled server-side by Kleap. Ever
 | **XSS** | Content is auto-escaped by default; unsafe raw-HTML patterns are flagged |
 | **Insecure transport** | HTTPS enforced automatically on every site and custom domain |
 | **Form spam / abuse** | Kleap validates, sanitizes, and rate-limits every submission |
-| **Data leaks between users** | Row-Level Security scopes each user to their own rows |
+| **Data leaks between users** | Each user is scoped to their own rows |
 
 ### What you should keep in mind
 
@@ -112,7 +112,7 @@ Before launching, verify:
     If your app has logins, they use Kleap's built-in accounts.
   </Step>
   <Step title="Data scoped per user">
-    If you store data, Row-Level Security limits each user to their own rows.
+    If you store data, Kleap limits each user to their own rows.
   </Step>
   <Step title="Protected pages">
     Private pages (dashboards, account areas) are behind a login.

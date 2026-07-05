@@ -127,28 +127,34 @@ dark overlay, and centered text"
 </div>
 ```
 
-## Video from Supabase Storage
+## Hosting Larger Videos
 
-Store videos in Supabase:
+Short clips can live in your `public/` folder and play with a standard `<video>`
+tag (see [Self-Hosted Videos](#self-hosted-videos) above). But video files are
+large, and bundling big files into your site bloats the build and slows page
+loads.
+
+For anything beyond a short clip, host the video on a dedicated video platform
+and embed it. This offloads bandwidth, adds adaptive streaming, and keeps your
+site fast:
 
 ```typescript
-const videoUrl = supabase.storage
-  .from('videos')
-  .getPublicUrl('demo.mp4');
-
-<video src={videoUrl} controls />
+// Embed from a video host instead of shipping a large file
+<iframe
+  src="https://www.youtube.com/embed/VIDEO_ID"
+  className="aspect-video w-full rounded-lg"
+  allowFullScreen
+/>
 ```
 
-### Upload Limits
+### Rough Guidance
 
-Consider Supabase storage limits for video:
+| Video size | Best approach |
+|------------|---------------|
+| Short clip (up to ~10 MB) | Static file in `public/` |
+| Longer or high-resolution video | Embed from a video host (YouTube, Vimeo) |
 
-| Plan | Storage | File Size |
-|------|---------|-----------|
-| Free | 1 GB | 50 MB |
-| Pro | 100 GB | 5 GB |
-
-For larger videos, consider external hosting.
+Keeping large media off your static build is the single biggest win for load time.
 
 ## Video Optimization
 
