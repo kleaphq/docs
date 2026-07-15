@@ -1,43 +1,42 @@
-# Mintlify Starter Kit
+<div align="center">
 
-Use the starter kit to get your docs deployed and ready to customize.
+# Kleap Documentation
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
+Official product documentation for [Kleap](https://kleap.co), the AI launch platform.
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
+[Read the documentation](https://docs.kleap.co) · [Start building](https://kleap.co)
 
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+</div>
 
-## Development
+## About this repository
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
+This repository contains the source for the Kleap documentation, including product guides, integrations, use cases, and reference material.
 
+Kleap lets you build and deploy production-ready websites and applications through natural conversation, with hosting, domains, forms, analytics, SEO, and payment-ready workflows included.
+
+## Local development
+
+Install the Mintlify CLI:
+
+```bash
+npm install --global mint
 ```
-npm i -g mint
-```
 
-Run the following command at the root of your documentation, where your `docs.json` is located:
+Run the documentation site from the repository root:
 
-```
+```bash
 mint dev
 ```
 
-View your local preview at `http://localhost:3000`.
+The local preview will be available at `http://localhost:3000`.
 
-## Publishing changes
+## Contributing
 
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
+Small fixes and documentation improvements are welcome. For larger changes, open an issue first so the proposed update can be aligned with the product.
 
-## Need help?
+## Links
 
-### Troubleshooting
+- [Kleap](https://kleap.co)
+- [Documentation](https://docs.kleap.co)
+- [Developer platform](https://github.com/kleaphq/kleap-developers)
 
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
-
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
