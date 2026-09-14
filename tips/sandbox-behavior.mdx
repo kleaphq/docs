@@ -22,15 +22,19 @@ site and shows the result in the editor's preview pane.
 - Nothing to "wake up" or restart; there's no idle timeout to hit
 
 <Info>
-  For a permanent, public URL, your site is [published automatically](/features/publishing)
+  For a permanent, public URL, [publish the reviewed draft](/features/publishing)
   to `https://your-app.kleap.io`.
 </Info>
 
 ## Publishing
 
-Publishing is **automatic**. When a generation finishes, Kleap builds your site
-and deploys it to a global edge network at `https://your-app.kleap.io` with free
-SSL. You don't have to click deploy for it to go live.
+Publishing is **deliberate**. When the preview is ready, open **Publish**, check
+the address, and click **Publish** in the panel. Kleap builds your site and deploys
+it to a global edge network at `https://your-app.kleap.io` with free SSL.
+
+<Frame caption="The Publish panel is the boundary between preview and production">
+  <img src="/images/tutorials/publish.webp" alt="Kleap Publish panel in English" />
+</Frame>
 
 ## What's Preserved
 
@@ -59,7 +63,7 @@ lose between sessions — the site is rebuilt fresh each time.
 <AccordionGroup>
   <Accordion title="Is there a dev sandbox I need to keep running?">
     No. Astro sites don't use a long-running sandbox. Kleap builds your site on
-    demand for preview and automatically on publish.
+    demand for preview and again when you choose Publish or Update.
   </Accordion>
 
   <Accordion title="Will I lose my code?">
@@ -69,7 +73,7 @@ lose between sessions — the site is rebuilt fresh each time.
 
   <Accordion title="Why doesn't my preview match the live site yet?">
     The preview shows your latest local changes. The live site updates when the
-    automatic publish build finishes.
+    next Publish or Update build finishes.
   </Accordion>
 
   <Accordion title="Where is my data stored?">

@@ -3,8 +3,8 @@ title: "Self Hosting"
 description: "Deploy your app to your own infrastructure"
 ---
 
-Kleap provides built-in hosting by default (your site goes live automatically at
-`https://your-app.kleap.io`). But you own your code — it's a standard **Astro**
+Kleap provides built-in hosting when you deliberately publish to
+`https://your-app.kleap.io`. But you own your code — it's a standard **Astro**
 project, so you can build it and host it anywhere that serves static or edge sites.
 
 <Info>
@@ -19,20 +19,27 @@ project, so you can build it and host it anywhere that serves static or edge sit
 
 ### Export to GitHub
 
-1. Connect GitHub in settings
-2. Push your code to a repository
-3. Clone the repository locally
+1. Open **Settings > Project settings > Integrations**
+2. Choose **GitHub** and click **Connect**
+3. Push your code to a repository
+4. Clone the repository locally
+
+<Frame caption="Connect GitHub from the Integrations catalog">
+  <img src="/images/tutorials/integrations.webp" alt="Kleap Integrations catalog in English" />
+</Frame>
 
 ```bash
 git clone https://github.com/you/your-app.git
 cd your-app
 ```
 
-### Download ZIP
+### Inspect Before Exporting
 
-1. Go to **Settings** > **Export**
-2. Click **Download ZIP**
-3. Extract and open in your editor
+Open **Settings** and choose **View code** to inspect the project before pushing it to GitHub.
+
+<Frame caption="Use View code to inspect the project source">
+  <img src="/images/tutorials/settings-menu.webp" alt="Kleap Settings menu in English showing View code" />
+</Frame>
 
 ## Running Locally
 
