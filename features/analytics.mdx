@@ -95,18 +95,22 @@ Understand your audience's devices:
 - **Browser** breakdown (Chrome, Safari, Firefox)
 - **Operating System** (Windows, macOS, iOS, Android)
 
-## Privacy Compliance
+## Privacy and Cookies
 
-Kleap Analytics is privacy-friendly:
+Kleap Analytics is built to collect as little as possible, but it is not cookie-free. On a published site, the tracker sets two first-party cookies in the visitor's browser:
 
-- No cookies required
-- GDPR compliant
-- No personal data collected
-- Anonymized visitor data
+| Cookie | What it holds | Lifetime |
+|--------|---------------|----------|
+| `ml_vid` | A random visitor ID, used to tell returning visitors apart | 1 year |
+| `ml_sid` | A random visit ID, used to group pageviews into one visit | 30 minutes, renewed on each page view |
 
-<Tip>
-  Unlike Google Analytics, Kleap Analytics doesn't require cookie consent banners.
-</Tip>
+- The cookies belong to your own site (and its subdomains). They are not shared with other sites, and visitors are not tracked from one site to another.
+- The IP address is not stored with your statistics. It is only used to limit abusive traffic. Country, region, city, network, browser, operating system and device type are stored.
+- No name or email address is collected, unless your site sends one on purpose (for example when a payment is matched to a visit).
+
+<Warning>
+  Whether you need a cookie banner or visitor consent depends on the rules of the country your site targets, and on how you use the data. Kleap cannot certify this for you: check with a legal adviser, and list these two cookies in your own privacy policy and cookie notice.
+</Warning>
 
 ## Third-Party Analytics
 
